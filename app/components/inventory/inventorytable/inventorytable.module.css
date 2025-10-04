@@ -1,0 +1,285 @@
+.tableContainer
+{
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    background: var(--surface-primary);
+    height: 545px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0;
+    transition: all 0.3s ease;
+}
+
+.tableContainer:hover
+{
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.dataTable
+{
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    table-layout: fixed;
+    transition: all 0.3s ease;
+}
+
+.dataTable thead
+{
+    background: var(--surface-secondary);
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.dataTable th
+{
+    padding: 10px 0 10px 30px;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.dataTable tbody tr
+{
+    border-bottom: 1px solid var(--border-primary);
+    height: 55px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dataTable tbody
+{
+    padding: 30px;
+}
+
+.dataTable tbody tr:hover
+{
+    background: var(--surface-tertiary) !important;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dataTable tbody tr:nth-child(odd)
+{
+    background: var(--surface-primary);
+}
+
+.dataTable tbody tr:nth-child(even)
+{
+    background: var(--surface-secondary);
+}
+
+.dataTable tbody tr:nth-child(odd):hover,
+.dataTable tbody tr:nth-child(even):hover
+{
+    background-color: #f0f0f0;
+}
+
+.dataTable tbody tr:last-child
+{
+    border-bottom: none;
+}
+
+.dataTable tbody td
+{
+    color: var(--text-primary);
+    padding: 10px 0 10px 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.emptyTableMessage
+{
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    background: transparent;
+    font-size: 18px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.roleClass
+{
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    width: fit-content;
+}
+
+.roleAdmin
+{
+    color: #1890ff;
+}
+
+.roleManager
+{
+    color: #a6a6a6;
+}
+
+.roleUser
+{
+    color: #ff9a57;
+}
+
+.statusBadge
+{
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    width: 90px;
+}
+
+.statusCompleted
+{
+    background-color: #e6f7f4;
+    color: #00a389;
+}
+
+.statusProcessing
+{
+    background-color: #eee6ff;
+    color: #7b5dfa;
+}
+
+.statusRejected
+{
+    background-color: #ffe6e6;
+    color: #ff5757;
+}
+
+.statusOnHold
+{
+    background-color: #fff2e6;
+    color: #ff9a57;
+}
+
+.statusActive
+{
+    background-color: #e6f7ff;
+    color: #1890ff;
+}
+
+.statusInactive
+{
+    background-color: #f0f0f0;
+    color: #a6a6a6;
+}
+
+.statusDefault
+{
+    background-color: var(--surface-tertiary);
+    color: var(--text-secondary);
+}
+
+.pagination
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-top: 1px solid var(--border-primary);
+    font-size: 14px;
+    color: var(--text-secondary);
+    background: var(--surface-secondary);
+}
+
+.paginationControls
+{
+    display: flex;
+    gap: 8px;
+}
+
+.paginationButton
+{
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.paginationButton:hover:not(:disabled)
+{
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.paginationButton:disabled
+{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--surface-tertiary);
+    color: var(--text-muted);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tableContainer {
+        height: auto;
+        max-height: 70vh;
+    }
+
+    .dataTable th,
+    .dataTable tbody td {
+        padding: 12px 0 12px 20px;
+        font-size: 13px;
+    }
+
+    .pagination {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+
+    .paginationButton {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dataTable th,
+    .dataTable tbody td {
+        padding: 10px 0 10px 15px;
+        font-size: 12px;
+    }
+
+    .statusBadge {
+        width: 80px;
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .pagination {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .paginationButton {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}

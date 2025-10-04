@@ -1,0 +1,16 @@
+.modalcontent
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 550px;
+    background-color: var(--text-primary);
+    border-radius: 10px 0 0 10px;
+    height: 100vh;
+    overflow: auto;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    color: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

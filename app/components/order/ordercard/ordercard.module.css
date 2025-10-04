@@ -1,0 +1,262 @@
+.orderdata
+{
+    background-color: #202329;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 450px;
+    max-height: 330px;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.customerInfo
+{
+    display: flex;
+    align-items: center;
+}
+
+.orderNumberBox
+{
+    background-color: white;
+    color: #1f2937;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.customerDetails
+{
+    margin-left: 16px;
+}
+
+.customerName
+{
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.orderNumber
+{
+    color: #9ca3af;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.headerright
+{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.headerright svg
+{
+    cursor: pointer;
+    color: #666;
+    width: 15px;
+    height: 15px;
+}
+
+.statusCompleted
+{
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.statusPending
+{
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.statusCancelled
+{
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.deliverySection
+{
+
+    border-top: 1px solid #374151;
+    padding: 15px 12px;
+    background: #3D4142;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.deliveryInfo
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.deliveryInfo span
+{
+    font-size: 16px;
+    font-weight: 300;
+    color: #EAEAEA;
+}
+
+.label
+{
+    color: #9ca3af;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.itemsContainer
+{
+    border-bottom: 1px solid #374151;
+}
+
+.itemsHeader
+{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 8px 0;
+    gap: 0;
+}
+
+.itemsList
+{
+    height: 160px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.itemRow
+{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 8px 0;
+    gap: 0;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.quantity
+{
+
+}
+
+.itemName
+{
+    grid-column: span 3 / span 3;
+}
+
+.price
+{
+    grid-column-start: 5;
+    text-align: right;
+}
+
+.subtotalSection
+{
+    padding: 16px 0;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.subtotalLabel, .subtotalAmount
+{
+    font-weight: 500;
+}
+
+.buttonsContainer
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.buttonsContainer button
+{
+    width: 100%;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.detailsButton
+{
+    color: white;
+    border: 1px solid #4b5563;
+    cursor: pointer;
+}
+
+.completeButton
+{
+    background-color: white;
+    color: #1f2937;
+    border: none;
+    cursor: pointer;
+}
+
+.completedButton
+{
+    background-color: #d1fae5;
+    color: #065f46;
+    border: none;
+    cursor: default;
+}
+
+.cancelledButton
+{
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: none;
+    cursor: default;
+}
+
+/* Estilos adicionales para hacer scrollbar más bonita */
+.itemsList::-webkit-scrollbar
+{
+    width: 6px;
+}
+
+.itemsList::-webkit-scrollbar-track
+{
+    background: #374151;
+    border-radius: 3px;
+}
+
+.itemsList::-webkit-scrollbar-thumb
+{
+    background-color: #6b7280;
+    border-radius: 3px;
+}

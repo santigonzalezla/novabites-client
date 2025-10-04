@@ -1,0 +1,50 @@
+{
+  "inventory": {
+    "config": {
+      "columns": [
+        {"key": "product.numId", "header": "CÓDIGO", "width": "8%"},
+        {"key": "product.name", "header": "NOMBRE", "width": "20%"},
+        {"key": "product.category.name", "header": "CATEGORIA", "width": "10%"},
+        {"key": "product.basePrice", "header": "PRECIO BASE", "width": "15%"},
+        {"key": "allocatedStock", "header": "STOCK ACTUAL", "width": "15%"},
+        {"key": "minStock", "header": "MIN STOCK", "width": "20%"},
+        {"key": "status", "header": "ESTADO", "width": "15%"}
+      ],
+      "itemsPerPage": 8,
+      "pageLabels": {
+        "showing": "Mostrando",
+        "of": "de"
+      }
+    }
+  },
+  "storeRequest": {
+    "config": {
+      "columns": [
+        {"key": "product.name", "header": "NOMBRE", "width": "15%"},
+        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.minStock", "header": "MIN STOCK", "width": "8%"},
+        {"key": "requestStock", "header": "SOLICITUD", "width": "8%"}
+      ],
+      "itemsPerPage": 5,
+      "pageLabels": {
+        "showing": "Mostrando",
+        "of": "de"
+      }
+    }
+  },
+  "storeReturn": {
+    "config": {
+      "columns": [
+        {"key": "product.name", "header": "NOMBRE", "width": "15%"},
+        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "requestStock", "header": "CANTIDAD", "width": "8%"},
+        {"key": "returnReason", "header": "MOTIVO", "width": "10%"}
+      ],
+      "itemsPerPage": 5,
+      "pageLabels": {
+        "showing": "Mostrando",
+        "of": "de"
+      }
+    }
+  }
+}

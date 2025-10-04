@@ -1,0 +1,88 @@
+.salescart
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+    justify-content: space-between;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    max-height: 90vh;
+    padding: 30px 25px;
+}
+
+.salescartcont
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.salescarttop
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.salescarttop h1
+{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.cartcontainer
+{
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cartcontainer::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cartcontainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.cartcontainer::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+    transition: background 0.2s ease;
+}
+
+.cartcontainer::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.cartbutton
+{
+    font-family: 'Satoshi', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--orange);
+    color: var(--bg-primary);
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.25);
+    font-weight: 300;
+    cursor: pointer;
+    border: none;
+}
+
+.cartbuttontext
+{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

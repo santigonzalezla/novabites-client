@@ -1,0 +1,78 @@
+.optioncard
+{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 430px;
+    border-radius: 10px;
+    background-color: var(--bg-secondary);
+    padding: 60px 50px;
+}
+
+.optioncardtop
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.optioncard h2
+{
+    font-size: 32px;
+}
+
+.optioncard p
+{
+    font-size: 20px;
+}
+
+.optioncard p>span
+{
+    font-weight: 700;
+}
+
+.sales
+{
+    box-shadow: 0 0 20px 5px rgba(253, 67, 2, 0.20);
+}
+
+.sales h2
+{
+    color: var(--orange);
+}
+
+.order
+{
+    box-shadow: 0 0 20px 5px rgba(130, 0, 255, 0.20);
+}
+
+.order h2
+{
+    color: var(--purple);
+}
+
+.inventory
+{
+    box-shadow: 0 0 20px 5px rgba(255, 27, 107, 0.20);
+}
+
+.inventory h2
+{
+    color: #FF1B6B;
+}
+
+.optionicons
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.optionicons span>svg
+{
+    position: absolute;
+    bottom: 20;
+    right: 20;
+}

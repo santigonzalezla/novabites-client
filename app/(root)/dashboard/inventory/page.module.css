@@ -1,0 +1,73 @@
+.inventory
+{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.top
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 25px;
+}
+
+.top h1
+{
+    font-size: 48px;
+    font-weight: 400;
+}
+
+.orderoptions
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.orderoptionsleft
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.orderoptionsleftinput
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orderoptionsleftinput
+{
+    position: relative;
+}
+
+.orderoptionsleftinput svg
+{
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+}
+
+.orderoptionsbutton
+{
+    width: 100%;
+    max-width: 200px;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--bg-primary);
+    padding: 12px 25px;
+    height: 45px;
+    border-radius: 8px;
+    background: #8200FF;
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}

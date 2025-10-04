@@ -1,0 +1,180 @@
+.filter {
+    display: flex;
+    width: 80%;
+    border-radius: 12px;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
+    font-size: 14px;
+    font-weight: 600;
+    height: 50px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.filter:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.filter > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border-primary);
+    padding: 15px 12px;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.filtericon {
+    width: 15%;
+    background: var(--surface-secondary);
+    color: var(--primary-color);
+}
+
+.filtericon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.filterby {
+    color: var(--text-secondary);
+    width: 50%;
+    font-weight: 500;
+    background: var(--surface-secondary);
+}
+
+.filtercontent,
+.filterreset {
+    width: 100%;
+}
+
+.filtercontent {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: var(--surface-primary);
+}
+
+.filtercontent:hover {
+    background: var(--surface-secondary);
+}
+
+.filtercontent svg {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary);
+    width: 16px;
+    height: 16px;
+    transition: all 0.3s ease;
+}
+
+.filtercontent:hover svg {
+    color: var(--primary-color);
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.filtercontent input {
+    width: calc(100% - 40px);
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+    font-family: "Satoshi", sans-serif;
+    outline: none;
+    padding: 0 15px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.filtercontent input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.filtercontent input:focus {
+    color: var(--primary-color);
+}
+
+.filter > div:last-child {
+    border-right: none;
+}
+
+.filterreset {
+    display: flex;
+    align-items: center;
+    color: #dc143c;
+    cursor: pointer;
+    gap: 8px;
+    min-width: 160px;
+    justify-content: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: var(--surface-primary);
+}
+
+.filterreset:hover {
+    background: rgba(220, 20, 60, 0.1);
+    color: #b91c3c;
+}
+
+.filterreset svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.filterreset:hover svg {
+    transform: rotate(180deg);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .filter {
+        flex-wrap: wrap;
+        height: auto;
+        width: 100%;
+    }
+
+    .filter > div {
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .filtericon,
+    .filterby {
+        width: 50%;
+    }
+
+    .filtercontent {
+        width: 50%;
+    }
+
+    .filterreset {
+        width: 100%;
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter {
+        font-size: 13px;
+    }
+
+    .filtercontent input {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter > div {
+        padding: 12px 10px;
+    }
+
+    .filterreset {
+        min-width: 140px;
+        font-size: 12px;
+    }
+}

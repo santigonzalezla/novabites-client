@@ -1,0 +1,320 @@
+.modalContent
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 15%;
+    bottom: 0;
+    margin: auto;
+    max-width: 450px;
+    background-color: var(--text-primary);
+    border-radius: 10px;
+    max-height: 95vh;
+    height: 100%;
+    overflow: auto;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    color: var(--bg-primary);
+}
+
+.orderDetails
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+}
+
+.headerleft
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerleft h2
+{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.headerleft p
+{
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.headerleft svg
+{
+    cursor: pointer;
+}
+
+.headerright
+{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.headerright span
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerright svg
+{
+    cursor: pointer;
+    color: #666;
+}
+
+.itemList
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 320px;
+    overflow-y: auto;
+}
+
+.itemList::-webkit-scrollbar {
+    width: 4px;
+}
+
+.itemList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.itemList::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+    transition: background 0.2s ease;
+}
+
+.itemList::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.removeButton
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removeButton svg
+{
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s ease;
+    width: 15px;
+    height: 15px;
+}
+
+.orderItem
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #3D4142;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    height: 55px;
+    transition: ease 0.8s all;
+}
+
+.itemInfo
+{
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.index
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.quantity {
+    color: #666;
+}
+
+.quantity .editable
+{
+    color: #CCC
+}
+
+.quantity input
+{
+    font-family: 'Satoshi', sans-serif;
+    width: 30px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 300;
+    background-color: transparent;
+    appearance: textfield;
+    outline: none;
+}
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.addItem
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    gap: 10px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.orderSummary
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 40px;
+    background: #3D4142;
+    color: var(--bg-primary);
+    font-size: 14px;
+    font-weight: 300;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.orderPaymentDetails
+{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.summaryRow
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.totalRow
+{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    padding-top: 10px;
+    border-top: 2px dashed rgba(173, 173, 173, 0.5);
+    margin-top: 20px;
+}
+
+.paymentMethods
+{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.paymentMethodsTop
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paymentMethodsTop p
+{
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.paymentMethodIcons
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.paymentMethodSelect {
+    width: 100%;
+    height: 45px;
+    padding: 0 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #3D4142;
+    color: #CCC;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paymentMethodSelect:focus {
+    outline: none;
+    color: white;
+}
+
+.paymentMethodSelect option {
+    background-color: #3D4142;
+    color: #CCC;
+    padding: 10px;
+}
+
+.actionButtons
+{
+    display: flex;
+    gap: 10px;
+}
+
+.actionButtons button
+{
+    cursor: pointer;
+    font-family: 'Satoshi', sans-serif;
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.cancelButton
+{
+    background-color: white;
+    color: #666;
+}
+
+.canceledButton
+{
+    background-color: #666;
+    color: white;
+    cursor: not-allowed;
+}
+
+.completeOrderButton
+{
+    background-color: var(--orange);
+    color: white;
+}

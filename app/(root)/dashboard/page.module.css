@@ -1,0 +1,15 @@
+.dashboard
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-bottom: 40px;
+}
+
+.options
+{
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}

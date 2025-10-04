@@ -1,0 +1,8 @@
+.fulldashboard
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px 60px;
+    height: 100vh;
+}

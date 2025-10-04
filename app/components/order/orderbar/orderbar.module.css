@@ -1,0 +1,43 @@
+.orderbar
+{
+    display: flex;
+    justify-content: flex-start;
+    gap: 30px;
+    align-items: center;
+}
+
+.orderbaroption
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    width: 120px;
+    height: 45px;
+    font-size: 16px;
+    color: #333;
+    transition: 0.3s ease;
+}
+
+.orderbaroption:hover
+{
+    color: var(--orange);
+}
+
+.active
+{
+    color: var(--bg-primary);
+    background: var(--orange);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+}
+
+.active:hover
+{
+    color: var(--bg-primary);
+}

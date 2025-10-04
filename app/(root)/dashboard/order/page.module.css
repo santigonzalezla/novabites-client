@@ -1,0 +1,76 @@
+.order
+{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.top
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 25px;
+}
+
+.top h1
+{
+    font-size: 48px;
+    font-weight: 400;
+}
+
+.orderoptions
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.orderoptions button
+{
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--bg-primary);
+    padding: 12px 25px;
+    height: 45px;
+    border-radius: 8px;
+    background: #8200FF;
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+}
+
+.grid
+{
+    padding: 15px 0;
+    height: 65vh;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 30px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+@media (min-width: 640px)
+{
+    .grid
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px)
+{
+    .grid
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px)
+{
+    .grid
+    {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
