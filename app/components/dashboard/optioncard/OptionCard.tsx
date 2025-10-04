@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import styles from './optioncard.module.css';
 import Link from 'next/link';
-import { ArrorRightDot } from '@/app/components/svg';
+import { ArrowRightDot } from '@/app/components/svg';
 
 interface OptionCardProps {
     className: string;
@@ -22,7 +22,7 @@ const OptionCard = ({ className, title, hook, subtitle, icon, link }: OptionCard
                     <p><span>{hook}</span>{` ${subtitle}`}</p>
                 </div>
                 <div className={styles.optionicons}>
-                    <ArrorRightDot />
+                    <ArrowRightDot />
                     <span>{icon}</span>
                 </div>
             </div>

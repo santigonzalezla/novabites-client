@@ -6,6 +6,8 @@ interface UseFetchOptions {
     body?: any;
     headers?: Record<string, string>;
     immediate?: boolean;
+    responseType?: 'json' | 'blob';
+    isFormData?: boolean;
 }
 
 interface UseFetchResults<T> {
@@ -16,9 +18,9 @@ interface UseFetchResults<T> {
     reset: () => void;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://novabites-production.up.railway.app/';
 
-export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): UseFetchResults<T> => 
+export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): UseFetchResults<T> =>
 {
     const [data, setData] = useState<T | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,8 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
         options.method,
         options.immediate,
         options.body,
+        options.responseType,
+        options.isFormData,
         JSON.stringify(options.headers)
     ])
 
@@ -36,7 +40,7 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
     {
         setIsLoading(true);
         setError(null);
-        
+
         try
         {
             const token = localStorage.getItem('authToken');
@@ -44,10 +48,13 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
 
             const urlToUse = overrideUrl || url;
 
+            const isFormData = mergedOptions.isFormData || false;
+
             const headers: Record<string, string> = {
-                'Content-Type': 'application/json',
                 ...mergedOptions.headers,
             }
+
+            if (!isFormData) headers['Content-Type'] = 'application/json';
 
             if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -58,7 +65,9 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
 
             if (mergedOptions.body && mergedOptions.method !== 'GET')
             {
-                fetchOptions.body = JSON.stringify(mergedOptions.body);
+                (isFormData)
+                    ? fetchOptions.body = mergedOptions.body
+                    : fetchOptions.body = JSON.stringify(mergedOptions.body);
             }
 
             const response = await fetch(`${API_BASE_URL}${urlToUse}`, fetchOptions);
@@ -75,7 +84,12 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
                 throw new Error(errorData.message || `Error {${response.status} al realizar la solicitud: ${response.statusText}`);
             }
 
-            const responseData:T = await response.json();
+            let  responseData:T;
+
+            (mergedOptions.responseType === 'blob')
+                ? responseData = await response.blob() as T
+                : responseData = await response.json();
+
             setData(responseData);
             return responseData;
         }
@@ -84,16 +98,16 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
             const errorMessage = e instanceof Error ? e.message : 'Error desconocido al realizar la solicitud';
             setError(errorMessage);
             console.error(errorMessage);
-            
+
             return null;
         }
-        finally 
+        finally
         {
             setIsLoading(false);
         }
 
     }, [url, stableOptions, logout]);
-    
+
     const reset = useCallback(() =>
     {
         setData(null);
@@ -106,8 +120,8 @@ export const useFetch = <T = any>(url: string, options: UseFetchOptions = {}): U
         if (stableOptions.immediate !== false) execute();
 
     }, [execute, stableOptions.immediate]);
-    
-    
+
+
     return { data, isLoading, error, execute, reset };
 }
 

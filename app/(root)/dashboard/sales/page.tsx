@@ -34,7 +34,7 @@ const Sales = () =>
     {
         if (data)
         {
-
+            console.log(user);
         }
     }, [data]);
 
@@ -135,6 +135,8 @@ const Sales = () =>
             ...(order?.amountReceived !== undefined && { amountReceived: order.amountReceived }),
             ...(order?.change !== undefined && { change: order.change }),
         }
+
+        console.log(newOrder);
 
         try
         {
