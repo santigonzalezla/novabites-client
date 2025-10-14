@@ -32,14 +32,6 @@ const Sales = () =>
 
     useEffect(() =>
     {
-        if (data)
-        {
-            console.log(user);
-        }
-    }, [data]);
-
-    useEffect(() =>
-    {
         if (categoryData && categoryData.length > 0)
         {
             setSelectedCategory({
@@ -116,6 +108,7 @@ const Sales = () =>
     const handleClosePaymentModal = () =>
     {
         setIsPaymentModalOpen(false);
+        clearCart();
     }
     
     const handleCreateOrder = async (order: any) =>
@@ -136,8 +129,6 @@ const Sales = () =>
             ...(order?.change !== undefined && { change: order.change }),
         }
 
-        console.log(newOrder);
-
         try
         {
             const newOrderResult = await orderExecute({
@@ -147,16 +138,17 @@ const Sales = () =>
 
             if (!orderError && newOrderResult)
             {
-                handleClosePaymentModal();
-                clearCart();
-
                 toast.success("Order creada correctamente", {
                     description: "La order ha sido creada exitosamente.",
                     duration: 3000,
                     richColors: true,
                     position: 'top-right'
                 });
+
+                return newOrderResult;
             }
+
+            return null;
         }
         catch (e)
         {

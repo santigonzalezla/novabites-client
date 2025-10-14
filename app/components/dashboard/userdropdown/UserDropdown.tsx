@@ -1,9 +1,10 @@
 import styles from './userdropdown.module.css';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { Logout, User } from '@/app/components/svg';
+import { List, Logout, User } from '@/app/components/svg';
 import { useAuth } from '@/context/AuthContext';
 import { Role } from '@/interfaces/enums';
+import Link from 'next/link';
 
 const UserDropdown = () =>
 {
@@ -23,16 +24,13 @@ const UserDropdown = () =>
 
     useEffect(() =>
     {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false)
-            }
+        const handleClickOutside = (event: MouseEvent) =>
+        {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setIsOpen(false);
         }
 
         document.addEventListener("mousedown", handleClickOutside)
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside)
-        }
+        return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
 
     return (
@@ -46,10 +44,15 @@ const UserDropdown = () =>
             </div>
             {isOpen && (
                 <div className={styles.dropdown}>
-                    <div className={styles.dropdownItem} onClick={handleProfileClick}>
+                    <Link className={styles.dropdownItem} onClick={handleProfileClick} href={'/dashboard/profile'}>
                         <User />
                         <span>Perfil</span>
-                    </div>
+                    </Link>
+                    <div className={styles.dropdownDivider}></div>
+                    <Link className={styles.dropdownItem} onClick={handleProfileClick} href={'/dashboard/orderslist'}>
+                        <List />
+                        <span>Ordenes</span>
+                    </Link>
                     <div className={styles.dropdownDivider}></div>
                     <div className={styles.dropdownItem} onClick={handleLogoutClick}>
                         <Logout />

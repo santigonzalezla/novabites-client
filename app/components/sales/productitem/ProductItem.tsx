@@ -13,14 +13,14 @@ const ProductItem = ({ product, onAddToCart }: ProductItemProps) =>
         <div className={styles.productitem} onClick={() => onAddToCart(product)}>
             <div className={styles.imagecontainer}>
                 <div className={styles.imagecircle}>
-                    {/*<Image
-                        src={"/burger.png"}
+                    <Image
+                        src={product?.imageUrl || "/placeholder.png"}
                         alt={product?.imageUrl || "Product Image"}
                         width={100}
                         height={100}
                         className={styles.image}
                         style={{ objectFit: "contain" }}
-                    />*/}
+                    />
                 </div>
             </div>
             <div className={styles.content}>

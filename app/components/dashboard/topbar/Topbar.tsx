@@ -21,10 +21,6 @@ const Topbar = () =>
                 >
                     {theme === "light" ? <Moon /> : <Sun />}
                 </button>
-                <div className={styles.topbell}>
-                    <Bell />
-                    <span className={styles.notificationCount}>3</span>
-                </div>
                 <UserDropdown />
             </div>
         </div>

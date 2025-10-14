@@ -21,7 +21,6 @@ const OrderDetails = ({ isEditing, setIsEditing, customOrder, onCancel, onComple
 
     const capitalizeFirstLetter = (str: string) =>
     {
-        console.log(customOrder);
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 

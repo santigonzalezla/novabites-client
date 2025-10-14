@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { ArrowLeft, Card, Cash, Plus, Transfer } from '@/app/components/svg';
 import { Product } from '@/interfaces/interfaces';
 import { toast } from 'sonner';
+import OrdersDetailsModal from '@/app/components/orderslist/ordersdetailsmodal/OrdersDetailsModal';
 
 interface PaymentModalProps {
-    handleCreateOrder: (order: any) => void;
+    handleCreateOrder: (order: any) => any;
     orderData: any;
     setOrderData: (data: any) => void;
     quantities: { [productId: string]: number };
@@ -20,6 +21,9 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
     const [transferOption, setTransferOption] = useState('nequi');
     const [amountReceived, setAmountReceived] = useState('');
     const [change, setChange] = useState('0');
+    const [showOrderDetails, setShowOrderDetails] = useState(false);
+    const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+
 
     useEffect(() =>
     {
@@ -28,14 +32,7 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
             const received = parseFloat(amountReceived);
             const total = parseFloat(orderData.total);
 
-            if (received >= total)
-            {
-                setChange((received - total).toFixed(2));
-            }
-            else
-            {
-                setChange('0.00');
-            }
+            (received >= total) ? setChange((received - total).toFixed(2)) : setChange('0.00');
         }
     }, [amountReceived, paymentMethod]);
 
@@ -70,7 +67,6 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
             return false;
         }
 
-        // Validar campos específicos para pago en efectivo
         if (paymentMethod === 'Cash')
         {
             if (!amountReceived || amountReceived.trim() === '')
@@ -126,21 +122,11 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
         }
         else
         {
-            setAmountReceived(prev => {
-                if (prev === '' && digit ==='-')
-                {
-                    return '0';
-                }
-
-                if (digit === '.' && prev.includes('.'))
-                {
-                    return prev;
-                }
-
-                if (prev.includes('.') && prev.split('.')[1].length >= 2 && digit !== 'backspace')
-                {
-                    return prev;
-                }
+            setAmountReceived(prev =>
+            {
+                if (prev === '' && digit ==='-') return '0';
+                if (digit === '.' && prev.includes('.')) return prev;
+                if (prev.includes('.') && prev.split('.')[1].length >= 2 && digit !== 'backspace') return prev;
 
                 return prev + digit;
             });
@@ -149,59 +135,48 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
 
     const formatCurrency = (value: string) =>
     {
-        // Elimina todos los puntos existentes para evitar confusiones
         let cleanValue = value.replace(/\./g, '');
-
-        // Divide el valor en parte entera y decimal
         let [integerPart, decimalPart] = cleanValue.split('.');
-
-        // Formatea la parte entera con separadores de miles
         integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        // Asegura que la parte decimal tenga exactamente dos dígitos
         decimalPart = decimalPart ? decimalPart.padEnd(2, '0').substring(0, 2) : '00';
 
-        // Combina la parte entera y decimal
         return `${integerPart}.${decimalPart}`;
     };
 
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) =>
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
 
         if (!validatePaymentForm()) return;
 
+        let orderToCreate: any = {
+            quantities,
+            cartItems,
+            total: orderData.total
+        };
+
         if (paymentMethod === 'Transfer')
         {
-            handleCreateOrder({
-                quantities,
-                cartItems,
-                paymentMethod: `Transferencia/${transferOption.charAt(0).toUpperCase() + transferOption.slice(1)}`,
-                total: orderData.total
-            });
+            orderToCreate.paymentMethod = `Transferencia/${transferOption.charAt(0).toUpperCase() + transferOption.slice(1)}`;
+        }
+        else if (paymentMethod === 'Cash')
+        {
+            orderToCreate.paymentMethod = 'Efectivo';
+            orderToCreate.amountReceived = amountReceived;
+            orderToCreate.change = change;
+        }
+        else if (paymentMethod === 'Card')
+        {
+            orderToCreate.paymentMethod = 'Debito/Crédito';
         }
 
-        if (paymentMethod === 'Cash')
-        {
-            handleCreateOrder({
-                quantities,
-                cartItems,
-                paymentMethod: 'Efectivo',
-                amountReceived,
-                change,
-                total: orderData.total,
-            });
-        }
+        const createdOrder = await handleCreateOrder(orderToCreate);
 
-        if (paymentMethod === 'Card')
+        if (createdOrder)
         {
-            handleCreateOrder({
-                quantities,
-                cartItems,
-                paymentMethod: 'Debito/Crédito',
-                total: orderData.total
-            });
+            setCreatedOrderId(createdOrder.id);
+            setShowOrderDetails(true);
         }
     };
 
@@ -209,6 +184,24 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
     {
         if (e.target === e.currentTarget) onClose();
     };
+
+    const handleCloseOrderDetails = () =>
+    {
+        setShowOrderDetails(false);
+        setCreatedOrderId(null);
+        onClose();
+    };
+
+    if (showOrderDetails && createdOrderId)
+    {
+        return (
+            <OrdersDetailsModal
+                orderId={createdOrderId}
+                type="order"
+                onClose={handleCloseOrderDetails}
+            />
+        );
+    }
 
     return (
         <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -239,13 +232,13 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                             {cartItems.map((item, index) => (
                                 <div key={index} className={styles.cartItem}>
                                     <div className={styles.itemImage}>
-                                        {/*<Image
-                                            src={'/burger.png'}
+                                        <Image
+                                            src={item.imageUrl || '/placeholder.png'}
                                             alt={item.name || ''}
                                             width={40}
                                             height={40}
                                             style={{objectFit: 'cover'}}
-                                        />*/}
+                                        />
                                     </div>
                                     <div className={styles.itemInfo}>
                                         <p className={styles.itemTitle}>{item.name}</p>

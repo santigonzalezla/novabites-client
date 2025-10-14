@@ -25,6 +25,7 @@ export interface BaseEntityWithNumId extends BaseEntity {
 // =============================================================================
 
 export interface User extends BaseEntityWithNumId {
+    typeId: TypeId;
     docId: string;
     status: string;
     name: string;
@@ -54,7 +55,7 @@ export interface UserDetails extends BaseEntity {
     address?: string | null;
     birthDate?: Date | string | null;
     city?: string | null;
-    imgUrl?: string | null;
+    imageUrl?: string | null;
     position?: string | null;
     typeContract?: TypeContract | null;
 
@@ -310,7 +311,14 @@ export interface CustomOrderProduct {
 }
 
 export interface Bill extends BaseEntityWithNumId {
+    billNumber: string;
     dueDate?: Date | string;
+    clientName?: string;
+    clientDocType?: TypeId;
+    clientDocId?: string;
+    clientAddress?: string;
+    clientPhone?: string;
+    clientEmail?: string;
     totalPrice: number | string; // Decimal
     userId: string;
     storeId: string;
@@ -328,8 +336,10 @@ export interface Bill extends BaseEntityWithNumId {
 export interface DetailBill extends BaseEntity {
     billId: string;
     productId: string;
+    productName: string;
     quantity: number;
-    price: number | string; // Decimal
+    unitPrice: number | string;
+    subtotal: number | string;
 
     // Relations
     bill?: Bill;

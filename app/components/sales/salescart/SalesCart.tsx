@@ -39,14 +39,17 @@ const SalesCart = ({ cartItems, quantities, setCartItems, onUpdateQuantity, onCl
                     ))}
                 </div>
             </div>
-            <button className={styles.cartbutton} onClick={
-                cartItems.length > 0 ? onPayClick : () => toast.warning('El carrito está vacío', {
-                    description: 'Agrega productos para continuar con el pago.',
-                    duration: 3000,
-                    richColors: true,
-                    position: 'top-right'
-                })
-            }>
+            <button
+                className={styles.cartbutton}
+                onClick={
+                    cartItems.length > 0 ? onPayClick : () => toast.warning('El carrito está vacío', {
+                        description: 'Agrega productos para continuar con el pago.',
+                        duration: 3000,
+                        richColors: true,
+                        position: 'top-right'
+                    })
+                }
+            >
                 <span>${total}</span>
                 <p className={styles.cartbuttontext}>
                     <span>Pagar</span>
