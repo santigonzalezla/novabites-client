@@ -17,13 +17,13 @@ const CartItem = ({ image, title, price, quantity, onIncrease, onDecrease, onRem
     return (
         <div className={styles.cartitem}>
             <div className={styles.cartitemleft}>
-                {/*<Image
-                    src={"/bolt.png"}
+                <Image
+                    src={image || '/placeholder.jpg'}
                     alt={image}
                     width={75}
                     height={60}
                     style={{objectFit: "cover"}}
-                />*/}
+                />
                 <div style={{width: 60, height: 60, border: '1px solid #000', borderRadius:'50%' }}></div>
                 <div className={styles.cartiteminfo}>
                     <span>{title}</span>

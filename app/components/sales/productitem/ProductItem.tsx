@@ -14,7 +14,7 @@ const ProductItem = ({ product, onAddToCart }: ProductItemProps) =>
             <div className={styles.imagecontainer}>
                 <div className={styles.imagecircle}>
                     <Image
-                        src={product?.imageUrl || "/placeholder.png"}
+                        src={product?.imageUrl || "/placeholder.jpg"}
                         alt={product?.imageUrl || "Product Image"}
                         width={100}
                         height={100}

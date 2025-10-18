@@ -233,7 +233,7 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                 <div key={index} className={styles.cartItem}>
                                     <div className={styles.itemImage}>
                                         <Image
-                                            src={item.imageUrl || '/placeholder.png'}
+                                            src={item.imageUrl || '/placeholder.jpg'}
                                             alt={item.name || ''}
                                             width={40}
                                             height={40}
