@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import Link from 'next/link';
@@ -18,7 +18,18 @@ const ResetPassword: React.FC = ()  =>
                 priority
             />
             <div className={styles.left}>
-                <ResetPasswordForm />
+                <Suspense fallback={
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100vh'
+                    }}>
+                        Cargando...
+                    </div>
+                }>
+                    <ResetPasswordForm />
+                </Suspense>
             </div>
             <div className={styles.right}>
                 <div className={styles.rightSquare}>
