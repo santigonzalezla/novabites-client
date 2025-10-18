@@ -1,14 +1,14 @@
 'use client';
 
 import styles from './inventorymodal.module.css';
-import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import ModalTable, { StoreRequestItem } from '@/app/components/inventory/modaltable/ModalTable';
 import { useFetch } from '@/hooks/useFetch';
 import mockData from '@/app/components/shared/data/mockData.json';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Store, StoreRequest } from '@/interfaces/interfaces';
-import { RequestStatus, RequestType } from '@/interfaces/enums';
+import { RequestStatus, RequestType, TypeStore } from '@/interfaces/enums';
 
 interface InventoryModalProps {
     onClose: () => void;
@@ -40,7 +40,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
             if (stores)
             {
                 const filteredStores = stores.filter((store: Store) =>
-                    store.type !== 'PRINCIPAL' && store.id !== user?.storeId
+                    store.type !== TypeStore.PRINCIPAL && store.id !== user?.storeId
                 );
 
                 setStoreList(filteredStores);
@@ -110,7 +110,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
             totalPrice: (item.product.basePrice as number) * item.requestStock
         }));
 
-        const centralStore = storeList.find(store => store.type === 'PRINCIPAL');
+        const centralStore = storeData?.find(store => store.type === TypeStore.PRINCIPAL);
 
         const storeRequest: Partial<StoreRequest> = {
             type: RequestType.SUPPLY_REQUEST,
@@ -174,12 +174,14 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
             returnReason: item.returnReason
         }));
 
+        const centralStore = storeData?.find(store => store.type === TypeStore.PRINCIPAL);
+
         const storeReturn: Partial<StoreRequest> = {
             type: RequestType.RETURN_REQUEST,
             status: RequestStatus.PENDING,
             requestingStoreId: user?.storeId,
             requestingUserId: user?.userId,
-            targetStoreId: '550e8400-e29b-41d4-a716-446655440101',
+            targetStoreId: centralStore?.id,
             requestedDate: new Date().toISOString(),
             details: details
         }
