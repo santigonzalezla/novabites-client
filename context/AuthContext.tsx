@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) =>
     const pathname = usePathname();
     const router = useRouter();
 
-    const publicRoutes = ['/', '/signin', '/signup'];
+    const publicRoutes = ['/', '/signin', '/signup', '/forgotpassword', '/resetpassword'];
 
     useEffect(() =>
     {
@@ -47,10 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) =>
                 }
 
                 setUser({ userId: payload.userId, name: payload.name, username: payload.username, role: payload.role, storeId: payload.storeId });
-                if (!publicRoutes.includes(pathname))
-                {
-                    router.push('/dashboard');
-                }
+
+                if (!publicRoutes.includes(pathname)) router.push('/dashboard');
             }
             catch (e)
             {
@@ -58,9 +56,48 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) =>
                 logout();
             }
         }
+        else
+        {
+            if (!publicRoutes.includes(pathname)) router.push('/signin');
+        }
 
         setIsLoading(false);
     }, []);
+
+    useEffect(() =>
+    {
+        if (!user) return;
+
+        const interval = setInterval(() =>
+        {
+            const token = localStorage.getItem('authToken');
+
+            if (token)
+            {
+                try
+                {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+
+                    if (payload.exp * 1000 < Date.now())
+                    {
+                        console.warn('Token expired during session, logging out');
+                        logout();
+                    }
+                }
+                catch (e)
+                {
+                    console.error('Failed to verify token expiration', e);
+                    logout();
+                }
+            }
+            else
+            {
+                logout();
+            }
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [user]);
 
     const login = (token: string) =>
     {

@@ -79,7 +79,7 @@ const SignInForm = () =>
                     />
                     <label htmlFor="remember" className={styles.rememberLabel}>Recuerdame</label>
                 </div>
-                <Link className={styles.forgotPassword} href={'/dashboard'}>
+                <Link className={styles.forgotPassword} href={'/forgotpassword'}>
                     ¿Olvidaste Tu Contraseña?
                 </Link>
             </div>

@@ -1,0 +1,81 @@
+.home
+{
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    background-color: #FFF;
+}
+
+.left
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-basis: 50%;
+}
+
+.left h1,
+.left p
+{
+    color: #1F2937;
+}
+
+.right
+{
+    position: relative;
+    display: flex;
+    flex-basis: 50%;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: #1F2937;
+    background-image: url('/loginbg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.rightSquare
+{
+    border-radius: 46px;
+    border: 1px solid rgba(255, 255, 255, 0.52);
+    background: rgba(255, 255, 255, 0.21);
+    backdrop-filter: blur(7px);
+    display: flex;
+    align-items: start;
+    justify-content: flex-start;
+    padding: 55px 25px;
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 500px;
+}
+
+.rightSquare span
+{
+    width: 60%;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 46px;
+    color: var(--white);
+}
+
+.rightCircle
+{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 100px;
+    left: -25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--white);
+    backdrop-filter: blur(7px);
+}

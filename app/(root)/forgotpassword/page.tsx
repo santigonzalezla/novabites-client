@@ -3,8 +3,10 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import Link from 'next/link';
 import SignInForm from '@/app/components/login/signinform/SignInForm';
+import ResetPasswordForm from '@/app/components/login/resetpasswordform/ResetPasswordForm';
+import ForgotForm from '@/app/components/login/forgotform/ForgotForm';
 
-const SignIn: React.FC = ()  =>
+const ForgotPassword: React.FC = ()  =>
 {
     return (
         <div className={styles.home}>
@@ -17,7 +19,7 @@ const SignIn: React.FC = ()  =>
                 priority
             />
             <div className={styles.left}>
-                <SignInForm />
+                <ForgotForm />
             </div>
             <div className={styles.right}>
                 <div className={styles.rightSquare}>
@@ -52,4 +54,4 @@ const SignIn: React.FC = ()  =>
     );
 }
 
-export default SignIn;
+export default ForgotPassword;
