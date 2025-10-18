@@ -93,7 +93,8 @@ const OrdersList = () => {
         setOrdersList(combinedBills);
     }, [orders, customOrders]);
 
-    const formatPrice = (price: number | string) => {
+    const formatPrice = (price: number | string) =>
+    {
         const numPrice = typeof price === "string" ? Number.parseFloat(price) : price;
         return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(numPrice);
     }
@@ -103,17 +104,6 @@ const OrdersList = () => {
         if (!date) return "N/A";
         const dateObj = typeof date === "string" ? new Date(date) : date;
         return new Intl.DateTimeFormat("es-CO", { year: "numeric", month: "short", day: "numeric" }).format(dateObj);
-    }
-
-    if (isLoading) {
-        return (
-            <div className={styles.bills}>
-                <Topbar />
-                <div className={styles.content}>
-                    <p>Cargando facturas...</p>
-                </div>
-            </div>
-        );
     }
 
     if (error || orderError) {
@@ -142,63 +132,69 @@ const OrdersList = () => {
                     </p>
                 </div>
 
-                <div className={styles.list}>
-                    {ordersList.length === 0 ? (
-                        <p>No hay facturas registradas</p>
-                    ) : (
-                        ordersList.map((order) => (
-                            <div key={order.id} className={styles.billCard}>
-                                <div className={styles.billHeader}>
-                                    <div className={styles.billNumber}>
+                {isLoading ? (
+                    <div className={styles.content}>
+                        <p>Cargando facturas...</p>
+                    </div>
+                ) : (
+                    <div className={styles.list}>
+                        {ordersList.length === 0 ? (
+                            <p>No hay facturas registradas</p>
+                        ) : (
+                            ordersList.map((order) => (
+                                <div key={order.id} className={styles.billCard}>
+                                    <div className={styles.billHeader}>
+                                        <div className={styles.billNumber}>
                                         <span className={styles.label}>
                                             {order.type === 'order' ? 'Orden' : 'Orden Personalizado'}
                                         </span>
-                                        <span className={styles.number}>{order.billNumber}</span>
+                                            <span className={styles.number}>{order.billNumber}</span>
+                                        </div>
+                                        <div className={styles.billPrice}>{formatPrice(order.totalPrice)}</div>
                                     </div>
-                                    <div className={styles.billPrice}>{formatPrice(order.totalPrice)}</div>
-                                </div>
 
-                                <div className={styles.billBody}>
-                                    <div className={styles.clientInfo}>
-                                        <div className={styles.infoRow}>
-                                            <User />
-                                            <span className={styles.clientName}>{order.clientName}</span>
+                                    <div className={styles.billBody}>
+                                        <div className={styles.clientInfo}>
+                                            <div className={styles.infoRow}>
+                                                <User />
+                                                <span className={styles.clientName}>{order.clientName}</span>
+                                            </div>
+
+                                            {order.clientDocId && (
+                                                <div className={styles.infoRow}>
+                                                    <IdCard />
+                                                    <span className={styles.docType}>{order.clientDocType}:</span>
+                                                    <span className={styles.docId}>{order.clientDocId}</span>
+                                                </div>
+                                            )}
+
+                                            {order.clientPhone && (
+                                                <div className={styles.infoRow}>
+                                                    <Phone />
+                                                    <span>{order.clientPhone}</span>
+                                                </div>
+                                            )}
                                         </div>
 
-                                        {order.clientDocId && (
-                                            <div className={styles.infoRow}>
-                                                <IdCard />
-                                                <span className={styles.docType}>{order.clientDocType}:</span>
-                                                <span className={styles.docId}>{order.clientDocId}</span>
+                                        <div className={styles.billFooter}>
+                                            <div className={styles.dueDate}>
+                                                <Calendar />
+                                                <span>Fecha: {formatDate(order.dueDate)}</span>
                                             </div>
-                                        )}
 
-                                        {order.clientPhone && (
-                                            <div className={styles.infoRow}>
-                                                <Phone />
-                                                <span>{order.clientPhone}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className={styles.billFooter}>
-                                        <div className={styles.dueDate}>
-                                            <Calendar />
-                                            <span>Fecha: {formatDate(order.dueDate)}</span>
+                                            <button
+                                                className={styles.viewButton}
+                                                onClick={() => setSelectedOrder({ id: order.id, type: order.type })}
+                                            >
+                                                Ver detalles
+                                            </button>
                                         </div>
-
-                                        <button
-                                            className={styles.viewButton}
-                                            onClick={() => setSelectedOrder({ id: order.id, type: order.type })}
-                                        >
-                                            Ver detalles
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    )}
-                </div>
+                            ))
+                        )}
+                    </div>
+                )}
             </div>
 
             {selectedOrder && (

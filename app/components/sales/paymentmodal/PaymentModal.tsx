@@ -32,7 +32,7 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
             const received = parseFloat(amountReceived);
             const total = parseFloat(orderData.total);
 
-            (received >= total) ? setChange((received - total).toFixed(2)) : setChange('0.00');
+            (received >= total) ? setChange(String(received - total)) : setChange('0');
         }
     }, [amountReceived, paymentMethod]);
 
@@ -248,7 +248,7 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                         <span>{quantities[item.id!] || 0}</span>
                                     </div>
                                     <div className={styles.itemTotal}>
-                                        ${(Number(item.basePrice) * (quantities[item.id!] || 0)).toFixed(2)}
+                                        ${(Number(item.basePrice) * (quantities[item.id!] || 0))}
                                     </div>
                                 </div>
                             ))}
@@ -331,9 +331,9 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                                         type="text"
                                                         id="amountReceived"
                                                         name="amountReceived"
-                                                        value={amountReceived && `$ ${formatCurrency(amountReceived)}`}
+                                                        value={`$ ${amountReceived}`}
                                                         onChange={handleInputChange}
-                                                        placeholder="$ 0.00"
+                                                        placeholder="$ 0"
                                                     />
                                                 </div>
                                             </div>

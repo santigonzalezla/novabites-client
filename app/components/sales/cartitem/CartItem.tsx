@@ -20,11 +20,10 @@ const CartItem = ({ image, title, price, quantity, onIncrease, onDecrease, onRem
                 <Image
                     src={image || '/placeholder.jpg'}
                     alt={image}
-                    width={75}
+                    width={60}
                     height={60}
-                    style={{objectFit: "cover"}}
+                    style={{objectFit: "cover", border: '1px solid #e0e0e0', borderRadius: '50%'}}
                 />
-                <div style={{width: 60, height: 60, border: '1px solid #000', borderRadius:'50%' }}></div>
                 <div className={styles.cartiteminfo}>
                     <span>{title}</span>
                     <div className={styles.counter}>
@@ -35,7 +34,7 @@ const CartItem = ({ image, title, price, quantity, onIncrease, onDecrease, onRem
                 </div>
             </div>
             <div className={styles.cartitemright}>
-                <span>${(price*quantity).toFixed(2)}</span>
+                <span>${(price*quantity)}</span>
                 <Remove onClick={onRemove} styles={{cursor: 'pointer'}} />
             </div>
         </div>

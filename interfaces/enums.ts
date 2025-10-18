@@ -89,7 +89,8 @@ export enum ActionType {
 
 export enum RequestType {
     SUPPLY_REQUEST = 'SUPPLY_REQUEST',
-    RETURN_REQUEST = 'RETURN_REQUEST'
+    RETURN_REQUEST = 'RETURN_REQUEST',
+    RELOCATION_REQUEST = 'RELOCATION_REQUEST'
 }
 
 export enum RequestStatus {

@@ -46,5 +46,19 @@
         "of": "de"
       }
     }
+  },
+  "storeRelocation": {
+    "config": {
+      "columns": [
+        {"key": "product.name", "header": "NOMBRE", "width": "15%"},
+        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "requestStock", "header": "CANTIDAD", "width": "8%"}
+      ],
+      "itemsPerPage": 5,
+      "pageLabels": {
+        "showing": "Mostrando",
+        "of": "de"
+      }
+    }
   }
 }

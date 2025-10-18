@@ -5,10 +5,10 @@ import styles from './page.module.css';
 import BackButton from '@/app/components/shared/backbutton/BackButton';
 import SalesCart from '@/app/components/sales/salescart/SalesCart';
 import ProductItem from '@/app/components/sales/productitem/ProductItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PaymentModal from '@/app/components/sales/paymentmodal/PaymentModal';
 import { useFetch } from '@/hooks/useFetch';
-import { Product, CategoryProduct, Order, DetailOrder } from '@/interfaces/interfaces';
+import { Product, CategoryProduct, Order, DetailOrder, StoreProduct } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -17,6 +17,10 @@ const Sales = () =>
 {
     const { user } = useAuth();
     const { data, isLoading, error } = useFetch<Product[]>('/api/product');
+    const [storeProductList, setStoreProductList] = useState<StoreProduct[]>([]);
+    const { isLoading: isStoreProductLoading, error: storeProductError, execute: executeStoreProduct } = useFetch<StoreProduct[]>(`/api/store-product/store/${user?.storeId}`, {
+        immediate: false,
+    });
     const { error: orderError, execute: orderExecute } = useFetch('/api/order', {
         immediate: false
     });
@@ -32,19 +36,88 @@ const Sales = () =>
 
     useEffect(() =>
     {
-        if (categoryData && categoryData.length > 0)
+        const fetchStoreProducts = async () =>
+        {
+            const storeProducts = await executeStoreProduct();
+
+            if (!storeProductError && storeProducts)
+            {
+                setStoreProductList(storeProducts);
+            }
+        }
+        fetchStoreProducts();
+    }, []);
+
+    const availableProducts = useMemo(() =>
+    {
+        if (!data || !storeProductList) return [];
+
+        const storeProductIds = new Set(
+            storeProductList
+                .filter(sp => sp.available && sp.currentStock > 0)
+                .map(sp => sp.productId)
+        );
+
+        return data.filter(product => storeProductIds.has(product.id));
+    }, [data, storeProductList]);
+
+    const availableCategories = useMemo(() =>
+    {
+        if (!categoryData || !availableProducts.length) return [];
+
+        const categoryIds = new Set(availableProducts.map(product => product.categoryId));
+
+        return categoryData.filter((category: { id: string | undefined; }) => categoryIds.has(category.id));
+    }, [categoryData, availableProducts]);
+
+
+    useEffect(() =>
+    {
+        if (availableCategories && availableCategories.length > 0)
         {
             setSelectedCategory({
-                id: categoryData[0].id,
-                name: categoryData[0].name,
+                id: availableCategories[0].id,
+                name: availableCategories[0].name,
             });
         }
-    }, [categoryData, setSelectedCategory]);
+    }, [availableCategories]);
 
-    const filteredProducts = data?.filter((product) => (product.categoryId === selectedCategory.id)) || [];
+    const filteredProducts = availableProducts?.filter((product) => (product.categoryId === selectedCategory.id)) || [];
+
+    const getProductStock = (productId: string) =>
+    {
+        const storeProduct = storeProductList?.find(sp => sp.productId === productId);
+
+        return { currentStock: storeProduct?.currentStock || 0, price: storeProduct?.price || '0' };
+    };
 
     const addToCart = (product: Partial<Product>) =>
     {
+        const stockInfo = getProductStock(product.id!);
+
+        // Validar que hay stock disponible
+        if (stockInfo.currentStock <= 0) {
+            toast.error("Producto sin stock", {
+                description: "Este producto no tiene stock disponible.",
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
+            });
+            return;
+        }
+
+        const currentQuantity = quantities[product.id!] || 0;
+
+        if (currentQuantity >= stockInfo.currentStock) {
+            toast.error("Stock insuficiente", {
+                description: `Solo hay ${stockInfo.currentStock} unidades disponibles.`,
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
+            });
+            return;
+        }
+
         if (!cartItems.find(item => item.id === product.id))
         {
             setCartItems([...cartItems, product]);
@@ -58,6 +131,8 @@ const Sales = () =>
 
     const updateQuantity = (productId: string, newQuantity: number) =>
     {
+        const stockInfo = getProductStock(productId);
+
         if (newQuantity <= 0)
         {
             setCartItems(cartItems.filter((item) => item.id !== productId));
@@ -65,6 +140,15 @@ const Sales = () =>
                 const newQuantities = { ...prev };
                 delete newQuantities[productId];
                 return newQuantities;
+            });
+        }
+        else if (newQuantity > stockInfo.currentStock)
+        {
+            toast.error("Stock insuficiente", {
+                description: `Solo hay ${stockInfo.currentStock} unidades disponibles.`,
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
             });
         }
         else
@@ -90,7 +174,9 @@ const Sales = () =>
             cartItems.reduce((total, item) =>
             {
                 const quantity = quantities[item.id!] || 0;
-                const itemPrice = Number(item?.basePrice) || 0;
+                const stockInfo = getProductStock(item.id!);
+
+                const itemPrice = Number(stockInfo.price) || Number(item?.basePrice) || 0;
                 return total + (itemPrice * quantity);
             }, 0)
         )
@@ -170,18 +256,26 @@ const Sales = () =>
                     <h1>Gestiona tus Ventas!</h1>
                 </div>
                 <Topbar
-                    categories={categoryData  || []}
+                    categories={availableCategories   || []}
                     selectedCategory={selectedCategory}
                     onCategoryChange={handleCategoryChange}
                 />
                 <div className={styles.grid}>
-                    {filteredProducts?.map((item, index) => (
-                        <ProductItem
-                            key={index}
-                            product={item}
-                            onAddToCart={() => addToCart(item)}
-                        />
-                    ))}
+                    {filteredProducts?.map((item, index) =>
+                    {
+                        const stockInfo = getProductStock(item.id);
+                        return (
+                            <ProductItem
+                                key={index}
+                                product={{
+                                    ...item,
+                                    centralStock: stockInfo.currentStock,
+                                    basePrice: stockInfo.price
+                                }}
+                                onAddToCart={() => addToCart(item)}
+                            />
+                        );
+                    })}
                 </div>
             </div>
             <div className={styles.right}>
