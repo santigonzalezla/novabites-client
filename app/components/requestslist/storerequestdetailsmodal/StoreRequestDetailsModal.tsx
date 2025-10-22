@@ -1,8 +1,8 @@
 "use client"
 
 import styles from "./storerequestdetailsmodal.module.css";
-import { useEffect, useState } from "react";
-import type { StoreRequest } from '@/interfaces/interfaces';
+import { useEffect, useState, useMemo } from "react";
+import type { StoreRequest, Product } from '@/interfaces/interfaces';
 import { X } from '@/app/components/svg';
 import { toast } from 'sonner';
 import { useFetch } from '@/hooks/useFetch';
@@ -16,7 +16,7 @@ interface RequestDetailsModalProps {
 const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalProps) =>
 {
     const [requestData, setRequestData] = useState<StoreRequest | null>(null);
-
+    const { data: productsData, execute: executeProducts } = useFetch<Product[]>('/api/product');
     const { execute: executeRequest, isLoading } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
         immediate: false,
     });
@@ -46,14 +46,27 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
         fetchRequestData();
     }, [requestId]);
 
+    const enrichedDetails = useMemo(() =>
+    {
+        if (!requestData?.details || !productsData) return requestData?.details || [];
+
+        return requestData.details.map(detail =>
+        {
+            const product = productsData.find(p => p.id === detail.productId);
+            return {
+                ...detail,
+                product: product || detail.product || {
+                    id: detail.productId,
+                    name: 'Producto no encontrado'
+                }
+            };
+        });
+    }, [requestData, productsData]);
+
     const formatPrice = (price: number | string) =>
     {
         const numPrice = typeof price === "string" ? Number.parseFloat(price) : price;
-        return new Intl.NumberFormat("es-CO", {
-            style: "currency",
-            currency: "COP",
-            minimumFractionDigits: 0
-        }).format(numPrice);
+        return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(numPrice);
     }
 
     const formatDate = (date: Date | string) =>
@@ -68,23 +81,14 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
         }).format(dateObj);
     }
 
-    const getTypeLabel = (type: string) => {
+    const getTypeLabel = (type: string) =>
+    {
         const labels: Record<string, string> = {
             'SUPPLY_REQUEST': 'Solicitud de Suministro',
             'RETURN_REQUEST': 'Devolución',
             'RELOCATION_REQUEST': 'Reubicación'
         };
         return labels[type] || type;
-    }
-
-    const calculateTotal = () => {
-        if (!requestData?.details) return 0;
-        return requestData.details.reduce((sum, detail) => {
-            const total = typeof detail.totalPrice === 'string'
-                ? parseFloat(detail.totalPrice)
-                : detail.totalPrice || 0;
-            return sum + total;
-        }, 0);
     }
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) =>
@@ -110,7 +114,6 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                 ) : (
                     <>
                         <div className={styles.requestContent}>
-                            {/* Stepper de estado */}
                             <RequestStepper
                                 currentStatus={requestData.status}
                                 requestedDate={requestData.requestedDate}
@@ -118,20 +121,14 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                 completedDate={requestData.completedDate}
                             />
 
-                            {/* Header de la solicitud */}
                             <div className={styles.requestHeader}>
                                 <div className={styles.requestInfo}>
                                     <span className={styles.label}>{getTypeLabel(requestData.type)}</span>
                                     <h3 className={styles.requestNumber}>REQ-{requestData.numId}</h3>
                                     <p className={styles.requestDate}>{formatDate(requestData.requestedDate)}</p>
                                 </div>
-                                <div className={styles.requestTotal}>
-                                    <span className={styles.label}>Total</span>
-                                    <p className={styles.totalAmount}>{formatPrice(calculateTotal())}</p>
-                                </div>
                             </div>
 
-                            {/* Información de las tiendas */}
                             <div className={styles.section}>
                                 <h4 className={styles.sectionTitle}>Información de la Solicitud</h4>
                                 <div className={styles.storeDetails}>
@@ -164,30 +161,23 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                 </div>
                             </div>
 
-                            {/* Productos solicitados */}
                             <div className={styles.section}>
                                 <h4 className={styles.sectionTitle}>Productos Solicitados</h4>
                                 <div className={styles.productsTable}>
                                     <div className={styles.tableHeader}>
-                                        <span>Producto</span>
+                                        <span className={styles.firstRow}>Producto</span>
                                         <span>Cantidad</span>
                                         <span>Precio Unit.</span>
                                         <span>Total</span>
                                     </div>
-                                    {requestData.details && requestData.details.length > 0 ? (
-                                        requestData.details.map((detail) => (
+                                    {enrichedDetails && enrichedDetails.length > 0 ? (
+                                        enrichedDetails.map((detail) => (
                                             <div key={detail.id} className={styles.tableRow}>
-                                                <span className={styles.productName}>
-                                                    {detail.product?.name || 'Producto'}
-                                                </span>
-                                                <span className={styles.quantity}>
-                                                    {detail.requestedQuantity}
-                                                </span>
-                                                <span className={styles.unitPrice}>
-                                                    {formatPrice(detail.unitPrice || 0)}
-                                                </span>
+                                                <span className={styles.productName}>{detail.product?.name || 'Producto'}</span>
+                                                <span className={styles.quantity}>{detail.requestedQuantity}</span>
+                                                <span className={styles.unitPrice}>{formatPrice(detail.unitPrice || 0)}</span>
                                                 <span className={styles.itemTotal}>
-                                                    {formatPrice(detail.totalPrice || 0)}
+                                                    {formatPrice((detail.requestedQuantity ?? 0) * (Number(detail.unitPrice) ?? 0))}
                                                 </span>
                                             </div>
                                         ))
@@ -202,7 +192,7 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                 <div className={styles.section}>
                                     <h4 className={styles.sectionTitle}>Motivos de Devolución</h4>
                                     <div className={styles.reasonsList}>
-                                        {requestData.details?.map((detail) => (
+                                        {enrichedDetails?.map((detail) => (
                                             detail.returnReason && (
                                                 <div key={detail.id} className={styles.reasonItem}>
                                                     <span className={styles.reasonProduct}>
@@ -217,16 +207,6 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                     </div>
                                 </div>
                             )}
-
-                            {/* Resumen */}
-                            <div className={styles.summary}>
-                                <div className={`${styles.summaryRow} ${styles.totalRow}`}>
-                                    <span className={styles.summaryLabel}>Total:</span>
-                                    <span className={styles.summaryValue}>
-                                        {formatPrice(calculateTotal())}
-                                    </span>
-                                </div>
-                            </div>
                         </div>
 
                         {/* Acciones */}
