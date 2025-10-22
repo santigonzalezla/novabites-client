@@ -1,0 +1,233 @@
+.stepperContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 12px;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.stepIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 3px solid;
+}
+
+.stepContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stepLabel {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.stepDate {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #888;
+}
+
+.stepLine {
+    flex: 1;
+    height: 3px;
+    background-color: #e0e0e0;
+    position: relative;
+    top: -25px;
+    transition: all 0.3s ease;
+}
+
+/* Estados de los pasos */
+.step.completed .stepIcon {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    border-color: #4caf50;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.step.completed .stepLabel {
+    color: #4caf50;
+}
+
+.step.current .stepIcon {
+    background: linear-gradient(135deg, var(--orange) 0%, #ff6b35 100%);
+    color: white;
+    border-color: var(--orange);
+    box-shadow: 0 4px 16px rgba(255, 152, 0, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.step.current .stepLabel {
+    color: var(--orange);
+    font-weight: 700;
+}
+
+.step.pending .stepIcon {
+    background: #f5f5f5;
+    color: #bdbdbd;
+    border-color: #e0e0e0;
+}
+
+.step.pending .stepLabel {
+    color: #bdbdbd;
+}
+
+.step.rejected .stepIcon,
+.step.canceled .stepIcon {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    border-color: #f44336;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.step.rejected .stepLabel,
+.step.canceled .stepLabel {
+    color: #f44336;
+    font-weight: 700;
+}
+
+.stepLine.completed {
+    background: linear-gradient(90deg, #4caf50 0%, #45a049 100%);
+}
+
+.stepLine.rejected {
+    background: linear-gradient(90deg, #f44336 0%, #d32f2f 100%);
+}
+
+/* Animación del paso actual */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 16px rgba(255, 152, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+    }
+}
+
+/* Información del estado */
+.statusInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.statusBadge {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.badge {
+    font-family: 'Satoshi', sans-serif;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge.pending {
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    color: #fff;
+}
+
+.badge.approved {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: #fff;
+}
+
+.badge.in_progress {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    color: #fff;
+}
+
+.badge.completed {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    color: #fff;
+}
+
+.badge.rejected,
+.badge.canceled {
+    background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stepperContainer {
+        padding: 20px;
+    }
+
+    .stepper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .step {
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .stepContent {
+        align-items: flex-start;
+    }
+
+    .stepLine {
+        display: none;
+    }
+
+    .stepIcon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    .stepLabel {
+        font-size: 13px;
+    }
+}

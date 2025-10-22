@@ -95,6 +95,7 @@
 
 .grid
 {
+    width: 100%;
     padding: 15px 0;
     height: 65vh;
     display: grid;

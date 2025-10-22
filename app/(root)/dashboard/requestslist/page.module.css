@@ -1,4 +1,4 @@
-.bills {
+.requests {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -6,16 +6,14 @@
     background: var(--bg-primary);
 }
 
-.top
-{
+.top {
     display: flex;
     align-items: center;
     width: 100%;
     gap: 25px;
 }
 
-.top h1
-{
+.top h1 {
     font-size: 48px;
     font-weight: 400;
 }
@@ -48,7 +46,7 @@
     gap: 1.25rem;
 }
 
-.billCard {
+.requestCard {
     background: var(--surface-primary);
     border: 1px solid var(--border-primary);
     border-radius: 12px;
@@ -57,13 +55,13 @@
     box-shadow: var(--shadow-sm);
 }
 
-.billCard:hover {
+.requestCard:hover {
     box-shadow: var(--shadow-md);
     border-color: var(--border-secondary);
     transform: translateY(-2px);
 }
 
-.billHeader {
+.requestHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -72,7 +70,7 @@
     border-bottom: 1px solid var(--border-primary);
 }
 
-.billNumber {
+.requestNumber {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -92,22 +90,57 @@
     color: var(--text-primary);
 }
 
-.billPrice {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.statusBadge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.billBody {
+.statusPending {
+    background: #FFF3CD;
+    color: #856404;
+}
+
+.statusApproved {
+    background: #D1ECF1;
+    color: #0C5460;
+}
+
+.statusRejected {
+    background: #F8D7DA;
+    color: #721C24;
+}
+
+.statusInProgress {
+    background: #D1ECF1;
+    color: #004085;
+}
+
+.statusCompleted {
+    background: #D4EDDA;
+    color: #155724;
+}
+
+.statusCanceled {
+    background: #E2E3E5;
+    color: #383D41;
+}
+
+.statusDefault {
+    background: #E9ECEF;
+    color: #495057;
+}
+
+.requestBody {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.clientInfo {
+.requestInfo {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -121,32 +154,19 @@
     color: var(--text-secondary);
 }
 
-.infoRow svg
-{
-    width: 15px;
-    height: 15px;
-}
-
-.icon {
+.infoRow svg {
+    width: 16px;
+    height: 16px;
     color: var(--text-muted);
-    flex-shrink: 0;
 }
 
-.clientName {
-    font-weight: 500;
+.storeName {
+    font-weight: 600;
     color: var(--text-primary);
     font-size: 1rem;
 }
 
-.docType {
-    color: var(--text-muted);
-}
-
-.docId {
-    color: var(--text-secondary);
-}
-
-.billFooter {
+.requestFooter {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -155,12 +175,17 @@
     border-top: 1px solid var(--border-primary);
 }
 
-.dueDate {
+.requestDate {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
     color: var(--text-secondary);
+}
+
+.requestDate svg {
+    width: 16px;
+    height: 16px;
 }
 
 .viewButton {
@@ -172,6 +197,7 @@
     font-weight: 500;
     transition: all 0.3s ease;
     border: 1px solid transparent;
+    cursor: pointer;
 }
 
 .viewButton:hover {
@@ -189,20 +215,16 @@
         font-size: 2rem;
     }
 
-    .billCard {
+    .requestCard {
         padding: 1rem;
     }
 
-    .billHeader {
+    .requestHeader {
         flex-direction: column;
         gap: 1rem;
     }
 
-    .billPrice {
-        font-size: 1.25rem;
-    }
-
-    .billFooter {
+    .requestFooter {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
