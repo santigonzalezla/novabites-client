@@ -8,10 +8,18 @@ import ProductItem from '@/app/components/sales/productitem/ProductItem';
 import { useEffect, useMemo, useState } from 'react';
 import PaymentModal from '@/app/components/sales/paymentmodal/PaymentModal';
 import { useFetch } from '@/hooks/useFetch';
-import { Product, CategoryProduct, Order, DetailOrder, StoreProduct } from '@/interfaces/interfaces';
+import {
+    Product,
+    CategoryProduct,
+    Order,
+    DetailOrder,
+    StoreProduct,
+    SubcategoryProduct,
+} from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { FilterCat } from '@/app/components/svg';
 
 const Sales = () =>
 {
@@ -26,6 +34,8 @@ const Sales = () =>
     });
     const { data: categoryData, isLoading: isCategoryLoading, error: categoryError } = useFetch('/api/category-product');
     const [selectedCategory, setSelectedCategory] = useState<Partial<CategoryProduct>>({ id: "", name: "" });
+    const [selectedSubcategory, setSelectedSubcategory] = useState<Partial<SubcategoryProduct> | null>(null);
+    const [showSubcategories, setShowSubcategories] = useState(false);
     const [cartItems, setCartItems] = useState<Partial<Product>[]>([]);
     const [quantities, setQuantities] = useState<{[productId: string]: number}>({});
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -70,6 +80,38 @@ const Sales = () =>
         return categoryData.filter((category: { id: string | undefined; }) => categoryIds.has(category.id));
     }, [categoryData, availableProducts]);
 
+    const categoryInfo = useMemo(() =>
+    {
+        if (!selectedCategory.id || !availableProducts.length)
+        {
+            return {
+                subcategories: [],
+                hasSubcategories: false,
+                productsWithSubcategory: [],
+                productsWithoutSubcategory: []
+            };
+        }
+
+        const categoryProducts = availableProducts.filter(p => p.categoryId === selectedCategory.id);
+        const productsWithSubcategory = categoryProducts.filter(p => p.subcategoryId);
+        const productsWithoutSubcategory = categoryProducts.filter(p => !p.subcategoryId);
+
+        const category = availableCategories.find((cat: any) => cat.id === selectedCategory.id);
+        const subcategories = category?.subcategories || [];
+
+        const availableSubcategories = subcategories.filter((sub: any) => categoryProducts.some(p => p.subcategoryId === sub.id));
+
+        const hasSubcategories = availableSubcategories.length > 0;
+
+        return {
+            subcategories: availableSubcategories,
+            hasSubcategories,
+            productsWithSubcategory,
+            productsWithoutSubcategory,
+            allProducts: categoryProducts
+        };
+    }, [selectedCategory, availableProducts, availableCategories]);
+
 
     useEffect(() =>
     {
@@ -82,7 +124,43 @@ const Sales = () =>
         }
     }, [availableCategories]);
 
-    const filteredProducts = availableProducts?.filter((product) => (product.categoryId === selectedCategory.id)) || [];
+    useEffect(() =>
+    {
+        if (categoryInfo.hasSubcategories && categoryInfo.subcategories.length > 0) setSelectedSubcategory(categoryInfo.subcategories[0]);
+        else if (!categoryInfo.hasSubcategories) setSelectedSubcategory(null);
+    }, [categoryInfo]);
+
+    const handleCategoryChange = (id: string, name: string) =>
+    {
+        setSelectedCategory({ id, name });
+        setSelectedSubcategory(null);
+    }
+
+    const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    {
+        const subcategoryId = e.target.value;
+
+        if (subcategoryId === 'others') setSelectedSubcategory({ id: 'others', name: 'Otros' } as SubcategoryProduct);
+        else if (subcategoryId === '') setSelectedSubcategory(null);
+        else
+        {
+            const subcategory = categoryInfo.subcategories.find((sub: SubcategoryProduct) => sub.id === subcategoryId);
+            if (subcategory) setSelectedSubcategory(subcategory);
+        }
+    }
+
+    const filteredProducts = useMemo(() =>
+    {
+        if (!selectedCategory.id) return [];
+        if (!categoryInfo.hasSubcategories) return categoryInfo.allProducts
+        if (!selectedSubcategory) return categoryInfo.allProducts;
+        if (selectedSubcategory.id === 'others') return categoryInfo.productsWithoutSubcategory;
+
+        return availableProducts.filter(p =>
+            p.categoryId === selectedCategory.id &&
+            p.subcategoryId === selectedSubcategory.id
+        );
+    }, [selectedCategory, selectedSubcategory, categoryInfo, availableProducts]);
 
     const getProductStock = (productId: string) =>
     {
@@ -161,11 +239,6 @@ const Sales = () =>
     {
         setCartItems([]);
         setQuantities({});
-    }
-
-    const handleCategoryChange = (id: string, name: string) =>
-    {
-        setSelectedCategory({ id, name });
     }
 
     const calculateTotal = () =>
@@ -260,6 +333,26 @@ const Sales = () =>
                     selectedCategory={selectedCategory}
                     onCategoryChange={handleCategoryChange}
                 />
+                {categoryInfo.hasSubcategories && (
+                    <div className={styles.subcategoryDropdown}>
+                        <label htmlFor="subcategory-select"><FilterCat /></label>
+                        <select
+                            id="subcategory-select"
+                            value={selectedSubcategory?.id || ''}
+                            onChange={handleSubcategoryChange}
+                            className={styles.subcategorySelect}
+                        >
+                            {categoryInfo.subcategories.map((subcategory: SubcategoryProduct) => (
+                                <option key={subcategory.id} value={subcategory.id}>
+                                    {subcategory.name}
+                                </option>
+                            ))}
+                            {categoryInfo.productsWithoutSubcategory.length > 0 && (
+                                <option value="others">Otros</option>
+                            )}
+                        </select>
+                    </div>
+                )}
                 <div className={styles.grid}>
                     {filteredProducts?.map((item, index) =>
                     {

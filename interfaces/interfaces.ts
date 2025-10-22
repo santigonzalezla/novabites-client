@@ -90,6 +90,7 @@ export interface Product extends BaseEntityWithNumId {
     basePrice: number | string;
     supplierId?: string;
     categoryId?: string;
+    subcategoryId?: string;
     expiryDate?: Date | string;
     imageUrl?: string;
     unit?: UnitType;
@@ -100,6 +101,7 @@ export interface Product extends BaseEntityWithNumId {
     // Relations
     supplier?: Supplier;
     category?: CategoryProduct;
+    subcategory?: SubcategoryProduct;
     billDetails?: DetailBill[];
     supplies?: ProductSupply[];
     orderDetails?: DetailOrder[];
@@ -218,6 +220,18 @@ export interface CategoryProduct extends BaseEntity {
 
     // Relations
     products?: Product[];
+    subcategories?: SubcategoryProduct[];
+    _count?: { products: number };
+}
+
+export interface SubcategoryProduct extends BaseEntity {
+    name: string;
+    categoryId: string;
+
+    // Relations
+    category?: CategoryProduct;
+    products?: Product[];
+    _count?: { products: number };
 }
 
 // =============================================================================

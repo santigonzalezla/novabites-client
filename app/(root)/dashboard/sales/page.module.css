@@ -37,6 +37,62 @@
     gap: 20px;
 }
 
+/* ✅ AÑADIR estos estilos */
+.subcategoryDropdown {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-primary);
+    margin-left: 15px;
+    margin-bottom: 20px;
+}
+
+.subcategoryDropdown label {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.subcategorySelect {
+    font-family: 'Satoshi', sans-serif;
+    flex: 1;
+    width: 275px;
+    padding: 10px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    background: white;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.subcategorySelect:hover {
+    border-color: var(--orange);
+}
+
+.subcategorySelect:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .subcategoryDropdown {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .subcategorySelect {
+        width: 100%;
+    }
+}
+
 .grid
 {
     padding: 15px 0;

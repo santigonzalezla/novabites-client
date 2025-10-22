@@ -119,3 +119,4 @@ export { default as FileDown } from './filedown.svg';
 export { default as Loader } from './loader.svg';
 export { default as Palette } from './palette.svg';
 export { default as IdCard } from './idcard.svg';
+export { default as FilterCat } from './filtercat.svg';

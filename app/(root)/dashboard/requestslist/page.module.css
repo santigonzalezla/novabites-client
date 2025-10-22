@@ -1,0 +1,215 @@
+.bills {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.top
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 25px;
+}
+
+.top h1
+{
+    font-size: 48px;
+    font-weight: 400;
+}
+
+.content {
+    padding: 20px 0;
+    width: 100%;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.billCard {
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.billCard:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-secondary);
+    transform: translateY(-2px);
+}
+
+.billHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.billNumber {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.number {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.billPrice {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.billBody {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.clientInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.infoRow svg
+{
+    width: 15px;
+    height: 15px;
+}
+
+.icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.clientName {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.docType {
+    color: var(--text-muted);
+}
+
+.docId {
+    color: var(--text-secondary);
+}
+
+.billFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-primary);
+}
+
+.dueDate {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.viewButton {
+    padding: 0.5rem 1.25rem;
+    background: var(--accent-purple-light);
+    color: var(--purple);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.viewButton:hover {
+    background: var(--accent-purple-medium);
+    border-color: var(--purple);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .billCard {
+        padding: 1rem;
+    }
+
+    .billHeader {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .billPrice {
+        font-size: 1.25rem;
+    }
+
+    .billFooter {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .viewButton {
+        width: 100%;
+        text-align: center;
+    }
+}
