@@ -35,7 +35,6 @@ const Sales = () =>
     const { data: categoryData, isLoading: isCategoryLoading, error: categoryError } = useFetch('/api/category-product');
     const [selectedCategory, setSelectedCategory] = useState<Partial<CategoryProduct>>({ id: "", name: "" });
     const [selectedSubcategory, setSelectedSubcategory] = useState<Partial<SubcategoryProduct> | null>(null);
-    const [showSubcategories, setShowSubcategories] = useState(false);
     const [cartItems, setCartItems] = useState<Partial<Product>[]>([]);
     const [quantities, setQuantities] = useState<{[productId: string]: number}>({});
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -173,8 +172,8 @@ const Sales = () =>
     {
         const stockInfo = getProductStock(product.id!);
 
-        // Validar que hay stock disponible
-        if (stockInfo.currentStock <= 0) {
+        if (stockInfo.currentStock <= 0)
+        {
             toast.error("Producto sin stock", {
                 description: "Este producto no tiene stock disponible.",
                 duration: 3000,
@@ -247,9 +246,8 @@ const Sales = () =>
             cartItems.reduce((total, item) =>
             {
                 const quantity = quantities[item.id!] || 0;
-                const stockInfo = getProductStock(item.id!);
+                const itemPrice = Number(item?.basePrice) || 0;
 
-                const itemPrice = Number(stockInfo.price) || Number(item?.basePrice) || 0;
                 return total + (itemPrice * quantity);
             }, 0)
         )
@@ -363,7 +361,7 @@ const Sales = () =>
                                 product={{
                                     ...item,
                                     centralStock: stockInfo.currentStock,
-                                    basePrice: stockInfo.price
+                                    basePrice: item.basePrice
                                 }}
                                 onAddToCart={() => addToCart(item)}
                             />
