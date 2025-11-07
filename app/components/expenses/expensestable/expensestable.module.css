@@ -1,0 +1,444 @@
+.expensesContainer {
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.addButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.addButton:hover {
+    background: #4A0091;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(93, 0, 186, 0.3);
+}
+
+.addButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.expensesTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.expensesTable thead {
+    background: var(--bg-primary);
+}
+
+.expensesTable th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-primary);
+}
+
+.expensesTable th:last-child {
+    text-align: center;
+}
+
+.expensesTable tbody tr {
+    transition: background 0.2s ease;
+}
+
+.expensesTable tbody tr:hover:not(.newRow):not(.totalRow) {
+    background: var(--bg-primary);
+}
+
+.expensesTable tbody tr:not(:last-child) {
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.expensesTable td {
+    padding: 1rem 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+}
+
+.newRow {
+    background: #f0f9ff !important;
+}
+
+.categoryBadge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: var(--accent-purple-light);
+    color: var(--purple);
+    border-radius: 16px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.rightText {
+    text-align: right;
+    font-weight: 500;
+}
+
+.input {
+    font-family: 'Satoshi', sans-serif;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 2px solid var(--border-primary);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background: white;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--purple);
+}
+
+.input::placeholder {
+    color: var(--text-muted);
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.editBtn,
+.deleteBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.editBtn {
+    background: var(--accent-purple-light);
+    color: var(--purple);
+}
+
+.editBtn:hover {
+    background: var(--purple);
+    color: white;
+}
+
+.deleteBtn {
+    background: #fee;
+    color: #dc3545;
+}
+
+.deleteBtn:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.editBtn svg,
+.deleteBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.saveBtn,
+.cancelBtn {
+    font-family: 'Satoshi', sans-serif;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.saveBtn {
+    background: var(--purple);
+    color: white;
+}
+
+.saveBtn:hover {
+    background: #4A0091;
+}
+
+.cancelBtn {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.cancelBtn:hover {
+    background: #dee2e6;
+}
+
+.emptyMessage {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.totalRow {
+    background: var(--accent-purple-light) !important;
+    border-top: 2px solid var(--purple) !important;
+}
+
+.totalRow td {
+    font-size: 1rem;
+    color: var(--purple);
+    padding: 1.25rem 1.5rem;
+}
+
+/* ... estilos anteriores ... */
+
+/* Botón de guardar tabla */
+.saveTableContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: var(--bg-primary);
+    border-top: 2px solid var(--border-primary);
+}
+
+.saveTableButton {
+    font-family: 'Satoshi', sans-serif;
+    padding: 1rem 2rem;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(93, 0, 186, 0.2);
+}
+
+.saveTableButton:hover:not(:disabled) {
+    background: #4A0091;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(93, 0, 186, 0.3);
+}
+
+.saveTableButton:disabled {
+    background: #adb5bd;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.saveTableButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Ajuste de acciones para un solo botón */
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+/* Responsive para el botón de guardar */
+@media (max-width: 768px) {
+    .saveTableContainer {
+        padding: 1rem;
+    }
+
+    .saveTableButton {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tableHeader {
+        padding: 1rem;
+    }
+
+    .addButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .expensesTable th,
+    .expensesTable td {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .saveBtn,
+    .cancelBtn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .expensesTable {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .expensesTable thead {
+        display: none;
+    }
+
+    .expensesTable tbody,
+    .expensesTable tr,
+    .expensesTable td {
+        display: block;
+    }
+
+    .expensesTable tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+    }
+
+    .expensesTable tr:not(:last-child) {
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .expensesTable td {
+        padding: 0.75rem 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .expensesTable td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .expensesTable td:first-child::before {
+        content: "Categoría:";
+    }
+
+    .expensesTable td:nth-child(2)::before {
+        content: "Descripción:";
+    }
+
+    .expensesTable td:nth-child(3)::before {
+        content: "Monto:";
+    }
+
+    .expensesTable td:last-child::before {
+        content: "Acciones:";
+    }
+
+    .actions {
+        flex-direction: row;
+        width: auto;
+    }
+
+    .totalRow td::before {
+        display: none;
+    }
+
+    .totalRow td:first-child {
+        justify-content: flex-start;
+    }
+}
+
+/* Nota de gastos pendientes */
+.pendingNote {
+    padding: 1rem 1.5rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.pendingNote p {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.875rem;
+    color: #856404;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Mensaje de historial */
+.historyNote {
+    padding: 1rem 1.5rem;
+    background: #e7f3ff;
+    border: 1px solid #2196f3;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.historyNote p {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.875rem;
+    color: #0d47a1;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Actualizar botones deshabilitados */
+.addButton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+.addButton:disabled:hover {
+    background: #ccc;
+    transform: none;
+    box-shadow: none;
+}
+
+.deleteBtn:disabled {
+    background: #e0e0e0;
+    color: #9e9e9e;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.deleteBtn:disabled:hover {
+    background: #e0e0e0;
+    color: #9e9e9e;
+}

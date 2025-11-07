@@ -17,6 +17,21 @@
       }
     }
   },
+  "storeRequestClose": {
+    "config": {
+      "columns": [
+        {"key": "product.name", "header": "NOMBRE", "width": "15%"},
+        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.minStock", "header": "MIN STOCK", "width": "8%"},
+        {"key": "requestStock", "header": "SOLICITUD", "width": "8%"}
+      ],
+      "itemsPerPage": 10,
+      "pageLabels": {
+        "showing": "Mostrando",
+        "of": "de"
+      }
+    }
+  },
   "storeRequest": {
     "config": {
       "columns": [

@@ -1,0 +1,428 @@
+.dailySales {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 25px;
+    margin-bottom: 2rem;
+}
+
+.top h1 {
+    font-size: 48px;
+    font-weight: 400;
+}
+
+.content {
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* Selector de fecha */
+.dateSelector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.dateSelector svg {
+    width: 24px;
+    height: 24px;
+    color: var(--purple);
+}
+
+.dateInput {
+    font-family: 'Satoshi', sans-serif;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dateInput:hover {
+    border-color: var(--purple);
+}
+
+.dateInput:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(93, 0, 186, 0.1);
+}
+
+.dateLabel {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Cards de resumen */
+.summaryCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summaryCard {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.summaryCard:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.summaryCard.positive {
+    border-left: 4px solid #28a745;
+}
+
+.summaryCard.negative {
+    border-left: 4px solid #dc3545;
+}
+
+.cardIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: var(--accent-purple-light);
+}
+
+.cardIcon svg {
+    width: 32px;
+    height: 32px;
+    color: var(--purple);
+}
+
+.positive .cardIcon {
+    background: #d4edda;
+}
+
+.positive .cardIcon svg {
+    color: #28a745;
+}
+
+.negative .cardIcon {
+    background: #f8d7da;
+}
+
+.negative .cardIcon svg {
+    color: #dc3545;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cardLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cardValue {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.cardSubtext {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Secciones */
+.section {
+    margin-bottom: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-primary);
+}
+
+.emptyMessage {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    background: var(--surface-primary);
+    border: 1px dashed var(--border-primary);
+    border-radius: 12px;
+}
+
+/* Tabla de productos */
+.tableContainer {
+    overflow-x: auto;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.productsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.productsTable thead {
+    background: var(--bg-primary);
+}
+
+.productsTable th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-primary);
+}
+
+.productsTable tbody tr {
+    transition: background 0.2s ease;
+}
+
+.productsTable tbody tr:hover {
+    background: var(--bg-primary);
+}
+
+.productsTable tbody tr:not(:last-child) {
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.productsTable td {
+    padding: 1rem 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+}
+
+.centerText {
+    text-align: center;
+}
+
+.rightText {
+    text-align: right;
+    font-weight: 500;
+}
+
+.totalRow {
+    background: var(--accent-purple-light) !important;
+    border-top: 2px solid var(--purple) !important;
+}
+
+.totalRow td {
+    font-size: 1rem;
+    color: var(--purple);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .summaryCards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .top h1 {
+        font-size: 32px;
+    }
+
+    .dateSelector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .summaryCard {
+        padding: 1.5rem;
+    }
+
+    .cardIcon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .cardIcon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .cardValue {
+        font-size: 1.5rem;
+    }
+
+    .productsTable {
+        font-size: 0.875rem;
+    }
+
+    .productsTable th,
+    .productsTable td {
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .productsTable {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .productsTable thead {
+        display: none;
+    }
+
+    .productsTable tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .productsTable td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+    }
+
+    .productsTable td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+}
+
+/* Botón de cierre de caja */
+.closingButton {
+    font-family: 'Satoshi', sans-serif;
+    margin-left: auto;
+    padding: 0.875rem 1.75rem;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+    white-space: nowrap;
+}
+
+.closingButton:hover:not(:disabled) {
+    background: #e68900;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.3);
+}
+
+.closingButton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .top {
+        flex-wrap: wrap;
+    }
+
+    .closingButton {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+}
+
+/* Mensajes de advertencia e información */
+.warningMessage {
+    padding: 1rem 1.5rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ffc107;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+    color: #856404;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.infoMessage {
+    padding: 1rem 1.5rem;
+    background: #d1ecf1;
+    border: 1px solid #0c5460;
+    border-left: 4px solid #0c5460;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+    color: #0c5460;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Actualizar botón de cierre */
+.closingButton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+.closingButton:disabled:hover {
+    background: #ccc;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .warningMessage,
+    .infoMessage {
+        font-size: 0.875rem;
+        padding: 0.875rem 1.25rem;
+    }
+}

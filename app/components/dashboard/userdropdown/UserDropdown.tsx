@@ -1,7 +1,7 @@
 import styles from './userdropdown.module.css';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { List, Logout, Order, User } from '@/app/components/svg';
+import { FileChart, List, Logout, Order, User } from '@/app/components/svg';
 import { useAuth } from '@/context/AuthContext';
 import { Role } from '@/interfaces/enums';
 import Link from 'next/link';
@@ -57,6 +57,11 @@ const UserDropdown = () =>
                     <Link className={styles.dropdownItem} onClick={handleProfileClick} href={'/dashboard/requestslist'}>
                         <Order />
                         <span>Solicitudes</span>
+                    </Link>
+                    <div className={styles.dropdownDivider}></div>
+                    <Link className={styles.dropdownItem} onClick={handleProfileClick} href={'/dashboard/expense'}>
+                        <FileChart />
+                        <span>Cierre de Caja</span>
                     </Link>
                     <div className={styles.dropdownDivider}></div>
                     <div className={styles.dropdownItem} onClick={handleLogoutClick}>

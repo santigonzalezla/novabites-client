@@ -120,3 +120,6 @@ export { default as Loader } from './loader.svg';
 export { default as Palette } from './palette.svg';
 export { default as IdCard } from './idcard.svg';
 export { default as FilterCat } from './filtercat.svg';
+export { default as TrendingUp } from './trendingup.svg';
+export { default as TrendingDown } from './trendingdown.svg';
+export { default as FileChart } from './filechart.svg';

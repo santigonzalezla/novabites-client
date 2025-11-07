@@ -31,7 +31,7 @@ export type TableConfig = {
 
 type ModalTableProps = {
     data: any[];
-    products: Product[];
+    products: Product[] | null;
     config: TableConfig;
     onDataChange?: (data: StoreRequestItem[]) => void;
 }
@@ -74,7 +74,7 @@ const ModalTable = ({ data, products, config, onDataChange }: ModalTableProps) =
     // Actualizar producto seleccionado
     const updateProduct = (index: number, productId: string) =>
     {
-        const selectedProduct = products.find(p => p.id === productId);
+        const selectedProduct = products?.find(p => p.id === productId);
 
         if (selectedProduct)
         {
@@ -113,7 +113,6 @@ const ModalTable = ({ data, products, config, onDataChange }: ModalTableProps) =
         onDataChange?.(updatedData);
     }
 
-    // Eliminar fila
     const removeRow = (index: number) =>
     {
         const updatedData = tableData.filter((_, i) => i !== index);
@@ -149,7 +148,7 @@ const ModalTable = ({ data, products, config, onDataChange }: ModalTableProps) =
                     className={styles.productselect}
                 >
                     <option value="">Selecciona un producto</option>
-                    {products.map(product => (
+                    {products?.map(product => (
                         <option key={product.id} value={product.id}>
                             {product.name}
                         </option>

@@ -109,3 +109,12 @@ export enum ReturnReason {
     EXCESS_STOCK = 'EXCESS_STOCK',
     OTHER = 'OTHER'
 }
+
+export enum ExpenseCategory {
+    RENT = 'RENT',
+    UTILITIES = 'UTILITIES',
+    SERVICES = 'SERVICES',
+    MAINTENANCE = 'MAINTENANCE',
+    SUPPLIES = 'SUPPLIES',
+    OTHER = 'OTHER'
+}
