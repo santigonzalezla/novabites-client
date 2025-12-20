@@ -1,7 +1,7 @@
 import {
     ActionType, ExpenseCategory,
     LogContext,
-    LogLevel, RequestStatus, RequestType, ReturnReason,
+    LogLevel, NotificationType, RequestStatus, RequestType, ReturnReason,
     Role,
     StatusOrder,
     StockMovementType,
@@ -432,4 +432,20 @@ export interface Delivery extends BaseEntityWithNumId {
     // Relations
     client?: Client;
     order?: Order;
+}
+
+export interface Notification {
+    id: string;
+    numId: number;
+    type: NotificationType;
+    title: string;
+    message: string;
+    relatedId?: string;
+    relatedType?: string;
+    recipientUserId?: string;
+    targetRoles: Role[];
+    targetStoreId?: string;
+    isRead: boolean;
+    readAt?: Date;
+    createdAt: Date;
 }

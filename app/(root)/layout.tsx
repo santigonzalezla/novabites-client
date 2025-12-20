@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import type {Metadata} from "next";
 import {satoshi} from "@/app/fonts/satoshi";
 import { AuthProvider } from '@/context/AuthContext';
+import { NotificationProvider } from '@/context/NotificationContext';
 import {APP_DESCRIPTION, APP_NAME, SERVER_URL} from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -21,8 +22,10 @@ export default function RootLayout({children}: Readonly<{ children: ReactNode;}>
         <html lang="en" suppressHydrationWarning>
             <body className={`${satoshi.variable} antialiased`}>
                 <AuthProvider>
-                    <Toaster />
-                    {children}
+                    <NotificationProvider>
+                        <Toaster />
+                        {children}
+                    </NotificationProvider>
                 </AuthProvider>
             </body>
         </html>
