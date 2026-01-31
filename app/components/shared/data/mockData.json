@@ -5,10 +5,11 @@
         {"key": "product.numId", "header": "CÓDIGO", "width": "8%"},
         {"key": "product.name", "header": "NOMBRE", "width": "20%"},
         {"key": "product.category.name", "header": "CATEGORIA", "width": "10%"},
-        {"key": "product.basePrice", "header": "PRECIO BASE", "width": "15%"},
-        {"key": "allocatedStock", "header": "STOCK ACTUAL", "width": "15%"},
-        {"key": "minStock", "header": "MIN STOCK", "width": "20%"},
-        {"key": "status", "header": "ESTADO", "width": "15%"}
+        {"key": "price", "header": "PRECIO BASE", "width": "15%"},
+        {"key": "allocatedStock", "header": "STOCK DESTINADO", "width": "12%"},
+        {"key": "currentStock", "header": "STOCK ACTUAL", "width": "12%"},
+        {"key": "minStock", "header": "MIN STOCK", "width": "12%"},
+        {"key": "available", "header": "ESTADO", "width": "15%"}
       ],
       "itemsPerPage": 8,
       "pageLabels": {

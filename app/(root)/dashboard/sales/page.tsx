@@ -197,7 +197,7 @@ const Sales = () =>
 
         if (!cartItems.find(item => item.id === product.id))
         {
-            setCartItems([...cartItems, product]);
+            setCartItems([...cartItems, { ...product, basePrice: product.basePrice }]);
             setQuantities(prev => ({ ...prev, [product.id!]: 1 }));
         }
         else
@@ -246,7 +246,8 @@ const Sales = () =>
             cartItems.reduce((total, item) =>
             {
                 const quantity = quantities[item.id!] || 0;
-                const itemPrice = Number(item?.basePrice) || 0;
+                const stockInfo = getProductStock(item.id!);
+                const itemPrice = Number(stockInfo.price) || 0;
 
                 return total + (itemPrice * quantity);
             }, 0)
@@ -271,11 +272,16 @@ const Sales = () =>
     const handleCreateOrder = async (order: any) =>
     {
         const newOrder: Partial<Order> = {
-            details: order.cartItems.map((item: Product) => ({
-                productId: item.id,
-                quantity: order.quantities[item.id] || 0,
-                price: Number(item.basePrice) * (order.quantities[item.id] || 0),
-            })) as DetailOrder[],
+            details: order.cartItems.map((item: Product) => {
+                const stockInfo = getProductStock(item.id!);
+                const itemPrice = Number(stockInfo.price) || 0;
+
+                return {
+                    productId: item.id,
+                    quantity: order.quantities[item.id] || 0,
+                    price: itemPrice * (order.quantities[item.id] || 0)
+                };
+            }) as DetailOrder[],
             totalPrice: String(order.total),
             status: StatusOrder.COMPLETED,
             ...(order?.clientId && { clientId: order.clientId }),
@@ -361,7 +367,7 @@ const Sales = () =>
                                 product={{
                                     ...item,
                                     centralStock: stockInfo.currentStock,
-                                    basePrice: item.basePrice
+                                    basePrice: stockInfo.price
                                 }}
                                 onAddToCart={() => addToCart(item)}
                             />
