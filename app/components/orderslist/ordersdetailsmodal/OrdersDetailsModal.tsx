@@ -83,6 +83,85 @@ const OrdersDetailsModal = ({ orderId, type, onClose }: OrdersDetailsModalProps)
         window.URL.revokeObjectURL(url);
     };
 
+    const printPdf = (blob: Blob) =>
+    {
+        const url = window.URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+
+        iframe.onload = () =>
+        {
+            const contentWindow = iframe.contentWindow;
+            if (contentWindow)
+            {
+                contentWindow.focus();
+                contentWindow.print();
+            }
+
+            setTimeout(() =>
+            {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(iframe);
+            }, 1000);
+        };
+    };
+
+    const handlePrintPdf = async () =>
+    {
+        if (!billData) return;
+
+        setIsGenerating(true);
+
+        try
+        {
+            const pdfBlob = await executePdf({
+                body: { billId: billData.id }
+            });
+
+            if (pdfBlob)
+            {
+                printPdf(pdfBlob as Blob);
+
+                toast.success('Factura lista para imprimir', {
+                    description: "Se abrió el cuadro de impresión.",
+                    duration: 3000,
+                    richColors: true,
+                    position: 'top-right'
+                });
+            }
+            else
+            {
+                toast.error('Error al imprimir', {
+                    description: "No se pudo generar el PDF para imprimir.",
+                    duration: 3000,
+                    richColors: true,
+                    position: 'top-right'
+                });
+            }
+        }
+        catch (error)
+        {
+            console.error('Error generando PDF:', error);
+            toast.error('Error al imprimir', {
+                description: "Por favor, inténtalo de nuevo más tarde.",
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
+            });
+        }
+        finally
+        {
+            setIsGenerating(false);
+        }
+    };
+
     const handleDownloadPdf = async () =>
     {
         if (!billData) return;
@@ -120,7 +199,7 @@ const OrdersDetailsModal = ({ orderId, type, onClose }: OrdersDetailsModalProps)
         catch (error)
         {
             console.error('Error generando PDF:', error);
-            toast.error('Error generando PDF', {
+            toast.error('Error al generar PDF', {
                 description: "Por favor, inténtalo de nuevo más tarde.",
                 duration: 3000,
                 richColors: true,
@@ -298,11 +377,18 @@ const OrdersDetailsModal = ({ orderId, type, onClose }: OrdersDetailsModalProps)
                         <div className={styles.modalActions}>
                             <button
                                 className={styles.printButton}
-                                onClick={handleDownloadPdf}
+                                onClick={handlePrintPdf}
                                 disabled={isGenerating}
                             >
                                 <Printer />
-                                {isGenerating ? 'Generando PDF...' : 'Descargar Factura'}
+                                {isGenerating ? 'Preparando impresión...' : 'Imprimir'}
+                            </button>
+                            <button
+                                className={styles.downloadButton}
+                                onClick={handleDownloadPdf}
+                                disabled={isGenerating}
+                            >
+                                PDF
                             </button>
                             <button className={styles.closeActionButton} onClick={onClose}>
                                 Cerrar
