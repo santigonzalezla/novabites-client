@@ -350,6 +350,7 @@ export interface CustomOrder extends BaseEntityWithNumId {
     depositAmount: number | string; // Decimal
     remainingAmount: number | string; // Decimal
     totalPrice: number | string; // Decimal
+    deliveryDate: Date | string;
     status: StatusOrder;
     available: boolean;
     deletedAt?: Date | string;

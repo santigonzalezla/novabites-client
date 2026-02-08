@@ -25,6 +25,7 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
     const [unitPrice, setUnitPrice] = useState<string>('');
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [depositAmount, setDepositAmount] = useState<string>('');
+    const [deliveryDate, setDeliveryDate] = useState<string>('');
     const [detailOrders, setDetailOrders] = useState<Partial<DetailCustomOrder>[]>([
         { imageUrl: '', pounds: 0, tiers: 0 }
     ]);
@@ -145,6 +146,7 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
             depositAmount: String(depositAmount ? parseFloat(depositAmount) : 0),
             remainingAmount: String(calculateTotal() - (depositAmount ? parseFloat(depositAmount) : 0)),
             totalPrice: String(calculateTotal()),
+            deliveryDate: new Date(deliveryDate).toISOString().split('T')[0],
             status: StatusOrder.PENDING,
             available: true,
         };
@@ -377,6 +379,21 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                                 ))}
                             </div>
                         )}
+                    </div>
+
+                    <div className={styles.section}>
+                        <h3>Fecha de Entrega:</h3>
+                        <div className={styles.paymentInfo}>
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="date"
+                                    placeholder="Fecha de Entrega"
+                                    value={deliveryDate}
+                                    onChange={(e) => setDeliveryDate(e.target.value)}
+                                    className={styles.input}
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Payment Information */}
