@@ -81,7 +81,7 @@ const RequestsList = () => {
         const labels: Record<string, string> = {
             'SUPPLY_REQUEST': 'Solicitud de Suministro',
             'RETURN_REQUEST': 'Devolución',
-            'RELOCATION_REQUEST': 'Reubicación'
+            'RELOCATION_REQUEST': 'Movimiento'
         };
         return labels[type] || type;
     }

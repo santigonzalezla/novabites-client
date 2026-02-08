@@ -142,6 +142,11 @@ const BillGenerator = ({ orderData, cartItems, quantities, onClose, isCustomOrde
         if (e.target === e.currentTarget) onClose();
     };
 
+    const handlePrint = () =>
+    {
+        window.print();
+    };
+
     return (
         <div className={styles.modalOverlay} onClick={handleOverlayClick}>
             <div className={styles.modalContent}>
@@ -223,12 +228,19 @@ const BillGenerator = ({ orderData, cartItems, quantities, onClose, isCustomOrde
 
                         <div className={styles.modalActions}>
                             <button
-                                className={styles.printButton}
+                                className={styles.printTicketButton}
+                                onClick={handlePrint}
+                                disabled={!billData}
+                            >
+                                <Printer />
+                                Imprimir
+                            </button>
+                            <button
+                                className={styles.downloadButton}
                                 onClick={handleDownloadPdf}
                                 disabled={isGenerating || !billData}
                             >
-                                <Printer />
-                                {isGenerating ? 'Generando PDF...' : 'Descargar Factura'}
+                                {isGenerating ? 'Generando...' : 'Descargar'}
                             </button>
                             <button className={styles.closeActionButton} onClick={onClose}>
                                 Cerrar

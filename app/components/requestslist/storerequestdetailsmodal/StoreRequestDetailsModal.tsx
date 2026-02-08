@@ -7,6 +7,15 @@ import { X } from '@/app/components/svg';
 import { toast } from 'sonner';
 import { useFetch } from '@/hooks/useFetch';
 import RequestStepper from '@/app/components/requestslist/requeststepper/RequestStepper';
+import { ReturnReason } from '@/interfaces/enums';
+
+const returnReasonLabels: Record<ReturnReason, string> = {
+    [ReturnReason.DAMAGED]: 'Dañado',
+    [ReturnReason.EXPIRED]: 'Vencido',
+    [ReturnReason.INCORRECT]: 'Incorrecto',
+    [ReturnReason.EXCESS_STOCK]: 'Exceso de stock',
+    [ReturnReason.OTHER]: 'Otro'
+};
 
 interface RequestDetailsModalProps {
     requestId: string;
@@ -199,7 +208,7 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                                         {detail.product?.name}:
                                                     </span>
                                                     <span className={styles.reasonText}>
-                                                        {detail.returnReason}
+                                                        {returnReasonLabels[detail.returnReason] || detail.returnReason}
                                                     </span>
                                                 </div>
                                             )

@@ -6,6 +6,14 @@ import { ReactNode, useState } from 'react';
 import { Product } from '@/interfaces/interfaces';
 import { ReturnReason } from '@/interfaces/enums';
 
+const returnReasonLabels: Record<ReturnReason, string> = {
+    [ReturnReason.DAMAGED]: 'Dañado',
+    [ReturnReason.EXPIRED]: 'Vencido',
+    [ReturnReason.INCORRECT]: 'Incorrecto',
+    [ReturnReason.EXCESS_STOCK]: 'Exceso de stock',
+    [ReturnReason.OTHER]: 'Otro'
+};
+
 export type StoreRequestItem = {
     product: Partial<Product>;
     requestStock?: number;
@@ -181,7 +189,7 @@ const ModalTable = ({ data, products, config, onDataChange }: ModalTableProps) =
                     <option value="">Selecciona una razón</option>
                     {Object.values(ReturnReason).map(reason => (
                         <option key={reason} value={reason}>
-                            {reason}
+                            {returnReasonLabels[reason] || reason}
                         </option>
                     ))}
                 </select>

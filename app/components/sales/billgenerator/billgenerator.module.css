@@ -237,7 +237,7 @@
     border-top: 1px solid #2d303e;
 }
 
-.printButton {
+.printTicketButton {
     font-family: "Satoshi", sans-serif;
     flex: 1;
     background-color: var(--orange);
@@ -255,8 +255,30 @@
     gap: 8px;
 }
 
-.printButton:hover {
+.printTicketButton:hover {
     opacity: 0.9;
+}
+
+.downloadButton {
+    font-family: "Satoshi", sans-serif;
+    background-color: transparent;
+    border: 1px solid #393c49;
+    color: #abbbc2;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+}
+
+.downloadButton:hover {
+    background-color: #2d303e;
+    color: #ffffff;
 }
 
 .closeActionButton {
@@ -278,14 +300,30 @@
 }
 
 @media print {
+    @page {
+        size: 80mm auto;
+        margin: 4mm;
+    }
+
+    html, body {
+        width: 80mm;
+        background: #ffffff;
+        color: #000000;
+    }
+
     .modalOverlay {
         background-color: transparent;
+        position: static;
+        width: auto;
+        height: auto;
     }
 
     .modalContent {
         box-shadow: none;
-        max-width: 100%;
+        max-width: 80mm;
         max-height: none;
+        width: 80mm;
+        border-radius: 0;
     }
 
     .modalHeader,
@@ -295,6 +333,29 @@
 
     .billContent {
         padding: 0;
+        overflow: visible;
+        page-break-inside: avoid;
+    }
+
+    .billHeader,
+    .billItems,
+    .billItem,
+    .billSummary {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .itemsHeader,
+    .billItem,
+    .summaryRow,
+    .totalRow,
+    .billDate,
+    .billHeader h3,
+    .itemName,
+    .itemQuantity,
+    .itemPrice,
+    .itemTotal {
+        color: #000000;
     }
 }
 
