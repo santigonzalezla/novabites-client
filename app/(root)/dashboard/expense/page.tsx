@@ -222,7 +222,7 @@ const DailySalesReport = () =>
                             <DollarSign />
                         </div>
                         <div className={styles.cardContent}>
-                            <span className={styles.cardLabel}>Ganancia Neta</span>
+                            <span className={styles.cardLabel}>Ingresos Totales</span>
                             <span className={styles.cardValue}>{formatPrice(netProfit)}</span>
                             <span className={styles.cardSubtext}>
                                 {netProfit >= 0 ? 'Positivo' : 'Negativo'}
