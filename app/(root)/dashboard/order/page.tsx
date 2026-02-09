@@ -160,14 +160,64 @@ const Order = () =>
         }
     }
 
-    const handleSaveNewOrder = async (order: Partial<CustomOrder>) =>
+    const handleSaveNewOrder = async (order: Partial<CustomOrder>, imageFiles?: { detailIndex: number, file: File }[]) =>
     {
         try
         {
-            const createdOrder = await execute({
-                method: 'POST',
-                body: order
-            }, `/api/custom-order`);
+            let createdOrder: CustomOrder[] | CustomOrder | null;
+
+            if (imageFiles && imageFiles.length > 0)
+            {
+                const details = order.details ? [...order.details] : [];
+                const reorderedDetails: typeof details = [];
+                const orderedFiles: File[] = [];
+
+                const sortedImageFiles = [...imageFiles].sort((a, b) => a.detailIndex - b.detailIndex);
+                const imageDetailIndices = new Set(sortedImageFiles.map(f => f.detailIndex));
+
+                sortedImageFiles.forEach(({ detailIndex, file }) =>
+                {
+                    if (details[detailIndex])
+                    {
+                        reorderedDetails.push(details[detailIndex]);
+                        orderedFiles.push(file);
+                    }
+                });
+
+                details.forEach((detail, idx) =>
+                {
+                    if (!imageDetailIndices.has(idx)) reorderedDetails.push(detail);
+                });
+
+                const formData = new FormData();
+                formData.append('storeId', order.storeId || '');
+                formData.append('userId', order.userId || '');
+                formData.append('depositAmount', String(order.depositAmount));
+                formData.append('remainingAmount', String(order.remainingAmount));
+                formData.append('totalPrice', String(order.totalPrice));
+                formData.append('deliveryDate', order.deliveryDate as string);
+                formData.append('status', order.status || StatusOrder.PENDING);
+                formData.append('available', 'true');
+
+                if (order.client) formData.append('client', JSON.stringify(order.client));
+                if (reorderedDetails.length > 0) formData.append('details', JSON.stringify(reorderedDetails));
+                if (order.products) formData.append('products', JSON.stringify(order.products));
+
+                orderedFiles.forEach(file => formData.append('images', file));
+
+                createdOrder = await execute({
+                    method: 'POST',
+                    body: formData,
+                    isFormData: true
+                }, `/api/custom-order`);
+            }
+            else
+            {
+                createdOrder = await execute({
+                    method: 'POST',
+                    body: order
+                }, `/api/custom-order`);
+            }
 
             if (!error && createdOrder)
             {

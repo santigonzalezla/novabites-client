@@ -1,114 +1,36 @@
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modalContent {
-    background-color: var(--text-primary, #ffffff);
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    color: var(--bg-primary, #000000);
-}
-
-.modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--text-secondary, #e5e5e5);
-}
-
-.modalHeader h2 {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.closeButton {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background-color 0.2s ease;
-}
-
-.closeButton:hover {
-    background-color: #f5f5f5;
-}
-
-.modalBody {
+.container {
     width: 100%;
-    padding: 24px;
-    max-height: 60vh;
-    overflow-y: auto;
-}
-
-.modalBody::-webkit-scrollbar {
-    width: 3px;
-}
-
-.modalBody::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.modalBody::-webkit-scrollbar-thumb {
-    background: var(--border-color, #e5e5e5);
-    border-radius: 3px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .section {
     margin-bottom: 24px;
 }
 
-.qrButton {
-    width: 100%;
-    padding: 12px;
-    background: var(--purple, #8200FF);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
+.section h3 {
+    font-size: 18px;
     font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+    color: var(--text-primary, #000000);
 }
 
-.qrButton:hover {
-    opacity: 0.9;
+.section p {
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #666;
 }
 
-.sectiontop
-{
+.sectiontop {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.sectiontop button
-{
+.sectiontop button {
     padding: 2px 15px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    background: var(--purple, #8200FF);
+    color: #fff;
     border: none;
     border-radius: 4px;
     font-size: 12px;
@@ -118,29 +40,7 @@
     white-space: nowrap;
 }
 
-.section h3 {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--bg-primary, #000000);
-}
-
-.section p
-{
-    font-size: 12px;
-    margin-bottom: 10px;
-    color: #666;
-}
-
-.inputGroup {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 5px;
-}
-
-.inputGroupName
-{
+.inputGroupName {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -148,13 +48,11 @@
     width: 100%;
 }
 
-.inputGroupName input
-{
+.inputGroupName input {
     width: 100%;
 }
 
-.inputDetailGroup
-{
+.inputDetailGroup {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -162,33 +60,29 @@
     width: 100%;
 }
 
-.inputDetailGroup input
-{
+.inputDetailGroup input {
     width: 100%;
 }
 
-.detailList
-{
+.detailList {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 .section input,
-.section select
-{
+.section select {
     padding: 12px 16px;
     border: none;
     border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
     transition: border-color 0.2s ease;
-    color: var(--bg-primary);
-    background-color: #3D4142;
+    color: var(--text-primary);
+    background-color: var(--surface-tertiary, #f3f4f6);
 }
 
-.section select
-{
+.section select {
     width: 100%;
 }
 
@@ -211,19 +105,14 @@
     align-items: center;
 }
 
-.fileInput input
-{
-    width: 100%;
-}
-
 .customFileButton {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary, #ccc);
     border-radius: 4px;
-    background: white;
+    background: var(--surface-primary, white);
     cursor: pointer;
     font-size: 14px;
     color: #666;
@@ -231,26 +120,23 @@
 }
 
 .customFileButton:hover {
-    border-color: #007bff;
-    color: #007bff;
+    border-color: var(--purple, #8200FF);
+    color: var(--purple, #8200FF);
 }
 
-.inputSmall
-{
-    padding: 12px 16px;
-    border: 1px solid var(--border-color, #e5e5e5);
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    transition: border-color 0.2s ease;
-    color: var(--bg-primary);
-    background-color: #3D4142;
-    width: 80px;
+.imagePreview {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
-.inputSmall:focus {
-    outline: none;
-    border-color: var(--orange, #ff6b35);
+.inputGroup {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
 }
 
 .addProductForm {
@@ -259,14 +145,12 @@
     margin-bottom: 15px;
 }
 
-.addInputGroup
-{
+.addInputGroup {
     display: flex;
     gap: 5px;
 }
 
-.addInputGroup input
-{
+.addInputGroup input {
     width: 50%;
 }
 
@@ -290,9 +174,8 @@
     background-color: var(--orange, #e55a2b);
 }
 
-.productsList
-{
-    border: 1px solid var(--border-color, #e5e5e5);
+.productsList {
+    border: 1px solid var(--border-primary, #e5e5e5);
     border-radius: 8px;
     max-height: 200px;
     overflow-y: auto;
@@ -303,7 +186,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color, #e5e5e5);
+    border-bottom: 1px solid var(--border-primary, #e5e5e5);
 }
 
 .productItem:last-child {
@@ -316,8 +199,7 @@
     gap: 10px;
 }
 
-.productInfo span
-{
+.productInfo span {
     display: flex;
     align-items: center;
 }
@@ -348,13 +230,6 @@
     color: #ff4444;
 }
 
-.noProducts {
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    font-style: italic;
-}
-
 .paymentInfo {
     margin-top: 10px;
     display: flex;
@@ -362,8 +237,7 @@
     gap: 12px;
 }
 
-.paymentRow
-{
+.paymentRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -374,20 +248,19 @@
     font-weight: 600;
     font-size: 16px;
     padding-top: 15px;
-    border-top: 1px solid var(--border-color, #e5e5e5);
+    border-top: 1px solid var(--border-primary, #e5e5e5);
 }
 
-.modalFooter {
+.footer {
     display: flex;
     gap: 12px;
-    padding: 20px 24px;
-    border-top: 1px solid var(--text-secondary, #e5e5e5);
+    padding: 20px 0;
     justify-content: flex-end;
 }
 
 .cancelButton {
     padding: 12px 24px;
-    background-color: #f5f5f5;
+    background-color: var(--surface-tertiary, #f5f5f5);
     color: #666;
     border: none;
     border-radius: 8px;
@@ -398,7 +271,7 @@
 }
 
 .cancelButton:hover {
-    background-color: #e5e5e5;
+    background-color: var(--border-primary, #e5e5e5);
 }
 
 .saveButton {
@@ -423,9 +296,16 @@
 }
 
 @media (max-width: 768px) {
-    .modalContent {
-        width: 95%;
-        margin: 20px;
+    .container {
+        padding: 15px;
+    }
+
+    .inputGroupName {
+        flex-direction: column;
+    }
+
+    .inputDetailGroup {
+        flex-wrap: wrap;
     }
 
     .addProductForm {
@@ -433,15 +313,19 @@
         align-items: stretch;
     }
 
-    .addProductForm .input {
-        min-width: auto;
-    }
-
-    .modalFooter {
+    .addInputGroup {
         flex-direction: column;
     }
 
-    .modalFooter button {
+    .addInputGroup input {
+        width: 100%;
+    }
+
+    .footer {
+        flex-direction: column;
+    }
+
+    .footer button {
         width: 100%;
     }
 }

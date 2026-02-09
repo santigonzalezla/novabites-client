@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './addordermodal.module.css';
 import type { Client, CustomOrder, CustomOrderProduct, DetailCustomOrder, Product } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
@@ -8,11 +8,12 @@ import { useFetch } from '@/hooks/useFetch';
 import { AddItem, Check, Plus } from '@/app/components/svg';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import QrModal from '@/app/components/order/qrmodal/QrModal';
 
 interface AddOrderModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (order: Partial<CustomOrder>) => void;
+    onSave: (order: Partial<CustomOrder>, imageFiles?: { detailIndex: number, file: File }[]) => void;
 }
 
 const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
@@ -23,13 +24,50 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState<string>('');
     const [unitPrice, setUnitPrice] = useState<string>('');
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [depositAmount, setDepositAmount] = useState<string>('');
     const [deliveryDate, setDeliveryDate] = useState<string>('');
     const [detailOrders, setDetailOrders] = useState<Partial<DetailCustomOrder>[]>([
         { imageUrl: '', pounds: 0, tiers: 0 }
     ]);
     const [productList, setProductList] = useState<{product: Product, quantity: number}[]>([]);
+    const [imageFiles, setImageFiles] = useState<Map<number, File>>(new Map());
+    const [imagePreviews, setImagePreviews] = useState<Map<number, string>>(new Map());
+    const fileInputRefs = useRef<Map<number, HTMLInputElement>>(new Map());
+    const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+
+    const handleImageChange = (index: number, file: File) =>
+    {
+        if (!file.type.startsWith('image/'))
+        {
+            toast.error("Archivo no válido", {
+                description: "Solo se permiten archivos de imagen.",
+                duration: 3000, richColors: true, position: 'top-right'
+            });
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024)
+        {
+            toast.error("Archivo muy grande", {
+                description: "El archivo no debe superar los 5MB.",
+                duration: 3000, richColors: true, position: 'top-right'
+            });
+            return;
+        }
+
+        const newFiles = new Map(imageFiles);
+        newFiles.set(index, file);
+        setImageFiles(newFiles);
+
+        const reader = new FileReader();
+        reader.onloadend = () =>
+        {
+            const newPreviews = new Map(imagePreviews);
+            newPreviews.set(index, reader.result as string);
+            setImagePreviews(newPreviews);
+        };
+        reader.readAsDataURL(file);
+    }
 
     const handleAddProduct = (productItem: {product: Product, quantity: number}) =>
     {
@@ -130,6 +168,31 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
         return true;
     };
 
+    const handleRemoveDetail = (index: number) =>
+    {
+        const newDetails = detailOrders.filter((_, i) => i !== index);
+        setDetailOrders(newDetails);
+
+        const newFiles = new Map(imageFiles);
+        const newPreviews = new Map(imagePreviews);
+        newFiles.delete(index);
+        newPreviews.delete(index);
+
+        const reindexedFiles = new Map<number, File>();
+        const reindexedPreviews = new Map<number, string>();
+        let newIdx = 0;
+        for (let i = 0; i < detailOrders.length; i++)
+        {
+            if (i === index) continue;
+            if (newFiles.has(i)) reindexedFiles.set(newIdx, newFiles.get(i)!);
+            if (newPreviews.has(i)) reindexedPreviews.set(newIdx, newPreviews.get(i)!);
+            newIdx++;
+        }
+
+        setImageFiles(reindexedFiles);
+        setImagePreviews(reindexedPreviews);
+    }
+
     const handleSaveOrder = () =>
     {
         if (!validateOrderForm()) return;
@@ -165,8 +228,22 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
 
         if (validDetails.length > 0) newOrder.details = validDetails as DetailCustomOrder[];
 
-        onSave(newOrder);
+        const files: { detailIndex: number, file: File }[] = [];
+        detailOrders.forEach((_, index) =>
+        {
+            if (imageFiles.has(index))
+            {
+                const validIndex = validDetails.indexOf(detailOrders[index]);
+                if (validIndex !== -1)
+                {
+                    files.push({ detailIndex: validIndex, file: imageFiles.get(index)! });
+                }
+            }
+        });
+
+        onSave(newOrder, files.length > 0 ? files : undefined);
     }
+
     if (!isOpen) return null;
 
     return (
@@ -178,6 +255,12 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                 </div>
 
                 <div className={styles.modalBody}>
+                    <div className={styles.section}>
+                        <button onClick={() => setIsQrModalOpen(true)} className={styles.qrButton}>
+                            Generar pedido con Código QR
+                        </button>
+                    </div>
+
                     {/* Client Information */}
                     <div className={styles.section}>
                         <h3>Información del Cliente</h3>
@@ -224,28 +307,35 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                                     <div className={styles.fileInput}>
                                         <input
                                             type="file"
-                                            id="image"
+                                            id={`modal-image-${index}`}
                                             accept="image/*"
                                             style={{ display: 'none' }}
+                                            ref={(el) => { if (el) fileInputRefs.current.set(index, el); }}
                                             onChange={(e) =>
                                             {
                                                 const file = e.target.files?.[0];
-                                                if (file) setSelectedImage(file);
+                                                if (file) handleImageChange(index, file);
                                             }}
-                                            required
                                         />
                                         <button
                                             type="button"
                                             className={styles.customFileButton}
-                                            onClick={() => document.getElementById('image')?.click()}
+                                            onClick={() => fileInputRefs.current.get(index)?.click()}
                                         >
-                                            <AddItem />
-                                            {selectedImage ? <Check /> : ''}
+                                            {imagePreviews.has(index) ? (
+                                                <img
+                                                    src={imagePreviews.get(index)}
+                                                    alt="Preview"
+                                                    style={{ width: 28, height: 28, borderRadius: 4, objectFit: 'cover' }}
+                                                />
+                                            ) : (
+                                                <AddItem />
+                                            )}
+                                            {imageFiles.has(index) ? <Check /> : ''}
                                         </button>
                                     </div>
                                     <input
                                         type="number"
-                                        id="pounds"
                                         placeholder="Libras"
                                         value={detail.pounds || ''}
                                         onChange={(e) =>{
@@ -254,11 +344,9 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                                             setDetailOrders(newDetailOrders);
                                         }}
                                         className={styles.input}
-                                        required
                                     />
                                     <input
                                         type="number"
-                                        id="tiers"
                                         placeholder="Niveles"
                                         value={detail.tiers || ''}
                                         onChange={(e) => {
@@ -267,11 +355,9 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                                             setDetailOrders(newDetailOrders);
                                         }}
                                         className={styles.input}
-                                        required
                                     />
                                     <input
                                         type="number"
-                                        id="price"
                                         placeholder="Precio"
                                         value={detail.price || ''}
                                         onChange={(e) => {
@@ -280,16 +366,12 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                                             setDetailOrders(newDetailOrders);
                                         }}
                                         className={styles.input}
-                                        required
                                     />
                                     {detailOrders.length > 1 && (
                                         <button
                                             type="button"
                                             className={styles.removeButton}
-                                            onClick={() => {
-                                                const newDetailOrders = detailOrders.filter((_, i) => i !== index);
-                                                setDetailOrders(newDetailOrders);
-                                            }}
+                                            onClick={() => handleRemoveDetail(index)}
                                         >
                                             ×
                                         </button>
@@ -429,6 +511,8 @@ const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
                     </button>
                 </div>
             </div>
+
+            <QrModal isOpen={isQrModalOpen} onClose={() => setIsQrModalOpen(false)} />
         </div>
     )
 }

@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) =>
     const pathname = usePathname();
     const router = useRouter();
 
-    const publicRoutes = ['/', '/signin', '/signup', '/forgotpassword', '/resetpassword'];
+    const publicRoutes = ['/', '/signin', '/signup', '/forgotpassword', '/resetpassword', '/order/create'];
 
     useEffect(() =>
     {
