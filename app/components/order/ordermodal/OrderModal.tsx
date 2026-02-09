@@ -26,8 +26,6 @@ const OrderModal = ({ customOrder, closeModal, onCancel, onCompleteOrder }: Orde
         onCompleteOrder(order);
         setCompletedOrderId(order.id);
         setShowOrderDetails(true);
-        console.log("Completed order:", order);
-        console.log(completedOrderId, showOrderDetails);
     };
 
     const handleCloseOrderDetails = () =>

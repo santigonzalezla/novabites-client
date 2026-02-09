@@ -1,0 +1,106 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.modalContent {
+    background-color: var(--text-primary, #ffffff);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    color: var(--bg-primary, #000000);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color, #e5e5e5);
+}
+
+.modalHeader h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+    background-color: #f5f5f5;
+}
+
+.modalBody {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.imageContainer {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #3D4142;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.imageContainer img {
+    width: 380px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.detailsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: #3D4142;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.detailLabel {
+    color: #999;
+    font-weight: 400;
+}
+
+.detailValue {
+    font-weight: 500;
+}

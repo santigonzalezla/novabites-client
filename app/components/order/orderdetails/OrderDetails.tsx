@@ -1,10 +1,11 @@
 'use client';
 
 import styles from './orderdetails.module.css';
-import { AddItem, Card, Edit, Trash } from '@/app/components/svg';
-import { CustomOrder } from '@/interfaces/interfaces';
+import { AddItem, Card, Edit, Eye, Trash } from '@/app/components/svg';
+import { CustomOrder, DetailCustomOrder } from '@/interfaces/interfaces';
 import { useState } from 'react';
 import { StatusOrder } from '@/interfaces/enums';
+import DetailCustomOrderModal from '@/app/components/order/detailcustomordermodal/DetailCustomOrderModal';
 
 interface OrderDetailsProps {
     isEditing: boolean
@@ -18,6 +19,7 @@ interface OrderDetailsProps {
 const OrderDetails = ({ isEditing, setIsEditing, customOrder, onCancel, onCompleteOrder, closeModal }: OrderDetailsProps) =>
 {
     const [paymentMethod, setPaymentMethod] = useState('cash');
+    const [selectedDetail, setSelectedDetail] = useState<DetailCustomOrder | null>(null);
 
     const capitalizeFirstLetter = (str: string) =>
     {
@@ -83,16 +85,21 @@ const OrderDetails = ({ isEditing, setIsEditing, customOrder, onCancel, onComple
                             {isEditing && <button className={styles.removeButton}><Trash /></button>}
                         </div>
                     ))}
-                    {customOrder.details?.map((product, index) => (
+                    {customOrder.details?.map((detail, index) => (
                         <div key={index} className={styles.orderItem}>
                             <div className={styles.itemInfo}>
                                 <span className={styles.index}>{(customOrder.products?.length ?? 0) + index + 1 < 10 ? `0${(customOrder.products?.length ?? 0) + (index + 1)}` : (customOrder.products?.length ?? 0) + (index + 1)}</span>
                                 <span className={styles.itemName}>Torta Personalizada</span>
+                                {detail.imageUrl && (
+                                    <span className={styles.eyeButton} onClick={() => setSelectedDetail(detail)}>
+                                        <Eye />
+                                    </span>
+                                )}
                             </div>
                             <div className={styles.itemcenter}>
-                                <span className={styles.quantity}>{product.pounds} lbs - {product.tiers} Pisos</span>
+                                <span className={styles.quantity}>{detail.pounds} lbs - {detail.tiers} Pisos</span>
                             </div>
-                            <span className={styles.itemPrice}>${product.price}</span>
+                            <span className={styles.itemPrice}>${detail.price}</span>
                             {isEditing && <button className={styles.removeButton}><Trash /></button>}
                         </div>
                     ))}
@@ -165,6 +172,12 @@ const OrderDetails = ({ isEditing, setIsEditing, customOrder, onCancel, onComple
                     </div>
                 </div>
             </div>
+            {selectedDetail && (
+                <DetailCustomOrderModal
+                    detail={selectedDetail}
+                    onClose={() => setSelectedDetail(null)}
+                />
+            )}
         </div>
     );
 }

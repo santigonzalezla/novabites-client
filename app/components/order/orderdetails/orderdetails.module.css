@@ -147,6 +147,27 @@
     font-weight: 300;
 }
 
+.eyeButton
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.eyeButton svg
+{
+    width: 16px;
+    height: 16px;
+    color: #999;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover svg
+{
+    color: var(--orange, #ff6b35);
+}
+
 .quantity {
     color: #666;
 }
