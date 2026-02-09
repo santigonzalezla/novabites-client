@@ -318,7 +318,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                                 className={`${styles.selectorButton} ${activeOption === 'relocation' ? styles.active : ''}`}
                                 onClick={() => setActiveOption('relocation')}
                             >
-                                Reubicación
+                                Movimiento
                             </button>
                         </div>
                     </div>
