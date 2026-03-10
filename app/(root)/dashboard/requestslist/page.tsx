@@ -181,6 +181,10 @@ const RequestsList = () => {
                 <StoreRequestDetailsModal
                     requestId={selectedRequest}
                     onClose={() => setSelectedRequest(null)}
+                    onCompleted={async () => {
+                        const requestsData = await execute();
+                        if (requestsData) setRequests(requestsData);
+                    }}
                 />
             )}
         </div>

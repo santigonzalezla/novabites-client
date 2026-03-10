@@ -120,6 +120,180 @@
     width: 90%;
 }
 
+.addproductbutton
+{
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* ── Celda de producto (categoría select + badge) ────────────────────────── */
+
+.productCellWrapper
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 8px;
+}
+
+.categoryselect
+{
+    font-family: 'Satoshi', sans-serif;
+    padding: 7px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 13px;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.categoryselect:focus
+{
+    border-color: var(--purple, #6200ee);
+}
+
+.selectedProductBadge
+{
+    display: inline-block;
+    font-size: 12px;
+    color: var(--green, #16a34a);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.rowActive td
+{
+    background: var(--accent-purple-light, #ede7f6) !important;
+}
+
+/* ── Panel de productos (fuera de la tabla) ──────────────────────────────── */
+
+.productPanel
+{
+    border-top: 2px solid var(--purple, #6200ee);
+    background: var(--bg-primary);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.productPanelHeader
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.productPanelTitle
+{
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.productPanelTitle strong
+{
+    color: var(--text-primary);
+}
+
+.productPanelClose
+{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.productPanelClose:hover
+{
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+}
+
+.pickerSearch
+{
+    font-family: 'Satoshi', sans-serif;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.pickerSearch:focus
+{
+    border-color: var(--purple, #6200ee);
+}
+
+.pickerProductList
+{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.pickerProductItem
+{
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Satoshi', sans-serif;
+    white-space: nowrap;
+}
+
+.pickerProductItem:hover
+{
+    border-color: var(--purple, #6200ee);
+    background: var(--accent-purple-light, #ede7f6);
+    color: var(--purple, #6200ee);
+}
+
+.pickerProductItemActive
+{
+    border-color: var(--purple, #6200ee);
+    background: var(--purple, #6200ee);
+    color: white;
+    font-weight: 600;
+}
+
+.pickerEmpty
+{
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+    padding: 8px 0;
+}
+
 .emptyTableMessage
 {
     text-align: center;

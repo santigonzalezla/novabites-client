@@ -7,7 +7,7 @@ import { X } from '@/app/components/svg';
 import { toast } from 'sonner';
 import { useFetch } from '@/hooks/useFetch';
 import RequestStepper from '@/app/components/requestslist/requeststepper/RequestStepper';
-import { ReturnReason } from '@/interfaces/enums';
+import { RequestStatus, RequestType, ReturnReason } from '@/interfaces/enums';
 
 const returnReasonLabels: Record<ReturnReason, string> = {
     [ReturnReason.DAMAGED]: 'Dañado',
@@ -20,14 +20,21 @@ const returnReasonLabels: Record<ReturnReason, string> = {
 interface RequestDetailsModalProps {
     requestId: string;
     onClose: () => void;
+    onCompleted?: () => void;
 }
 
-const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalProps) =>
+const StoreRequestDetailsModal = ({ requestId, onClose, onCompleted }: RequestDetailsModalProps) =>
 {
     const [requestData, setRequestData] = useState<StoreRequest | null>(null);
+    const [isCompleting, setIsCompleting] = useState(false);
     const { data: productsData, execute: executeProducts } = useFetch<Product[]>('/api/product');
     const { execute: executeRequest, isLoading } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
         immediate: false,
+    });
+    const { execute: executeComplete } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
+        immediate: false,
+        method: 'PATCH',
+        body: { status: RequestStatus.COMPLETED },
     });
 
     useEffect(() =>
@@ -38,7 +45,6 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
 
             if (request)
             {
-                console.log('Request Data:', request);
                 setRequestData(request);
             }
             else
@@ -100,10 +106,42 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
         return labels[type] || type;
     }
 
+    const handleComplete = async () =>
+    {
+        setIsCompleting(true);
+        const updated = await executeComplete();
+        setIsCompleting(false);
+
+        if (updated)
+        {
+            setRequestData(updated);
+            toast.success('Solicitud completada', {
+                description: 'Los productos han sido recibidos y el stock actualizado.',
+                duration: 4000,
+                richColors: true,
+                position: 'top-right'
+            });
+            onCompleted?.();
+        }
+        else
+        {
+            toast.error('Error al completar la solicitud', {
+                description: 'No se pudo actualizar el estado. Intenta nuevamente.',
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
+            });
+        }
+    }
+
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) =>
     {
         if (e.target === e.currentTarget) onClose();
     };
+
+    const canComplete =
+        requestData?.type === RequestType.SUPPLY_REQUEST &&
+        requestData?.status === RequestStatus.APPROVED;
 
     return (
         <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -175,21 +213,24 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
                                 <div className={styles.productsTable}>
                                     <div className={styles.tableHeader}>
                                         <span className={styles.firstRow}>Producto</span>
-                                        <span>Cantidad</span>
+                                        <span>Solicitado</span>
+                                        <span>Aprobado</span>
                                         <span>Precio Unit.</span>
-                                        <span>Total</span>
                                     </div>
                                     {enrichedDetails && enrichedDetails.length > 0 ? (
-                                        enrichedDetails.map((detail) => (
-                                            <div key={detail.id} className={styles.tableRow}>
-                                                <span className={styles.productName}>{detail.product?.name || 'Producto'}</span>
-                                                <span className={styles.quantity}>{detail.requestedQuantity}</span>
-                                                <span className={styles.unitPrice}>{formatPrice(detail.unitPrice || 0)}</span>
-                                                <span className={styles.itemTotal}>
-                                                    {formatPrice((detail.requestedQuantity ?? 0) * (Number(detail.unitPrice) ?? 0))}
-                                                </span>
-                                            </div>
-                                        ))
+                                        enrichedDetails.map((detail) => {
+                                            const hasAdjusted = detail.approvedQuantity != null && detail.approvedQuantity !== detail.requestedQuantity;
+                                            return (
+                                                <div key={detail.id} className={styles.tableRow}>
+                                                    <span className={styles.productName}>{detail.product?.name || 'Producto'}</span>
+                                                    <span className={styles.quantity}>{detail.requestedQuantity}</span>
+                                                    <span className={`${styles.quantity} ${hasAdjusted ? styles.adjustedQuantity : ''}`}>
+                                                        {detail.approvedQuantity ?? detail.requestedQuantity}
+                                                    </span>
+                                                    <span className={styles.unitPrice}>{formatPrice(detail.unitPrice || 0)}</span>
+                                                </div>
+                                            );
+                                        })
                                     ) : (
                                         <p className={styles.noProducts}>No hay productos registrados</p>
                                     )}
@@ -220,6 +261,15 @@ const StoreRequestDetailsModal = ({ requestId, onClose }: RequestDetailsModalPro
 
                         {/* Acciones */}
                         <div className={styles.modalActions}>
+                            {canComplete && (
+                                <button
+                                    className={styles.completeButton}
+                                    onClick={handleComplete}
+                                    disabled={isCompleting}
+                                >
+                                    {isCompleting ? 'Completando...' : 'Completar solicitud'}
+                                </button>
+                            )}
                             <button className={styles.closeActionButton} onClick={onClose}>
                                 Cerrar
                             </button>

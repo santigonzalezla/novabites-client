@@ -5,6 +5,7 @@ import BackButton from '@/app/components/shared/backbutton/BackButton';
 import InventoryTable from '@/app/components/inventory/inventorytable/InventoryTable';
 import { useEffect, useState } from 'react';
 import InventoryModal from '@/app/components/inventory/inventorymodal/InventoryModal';
+import ExternalStockModal from '@/app/components/inventory/externalstockmodal/ExternalStockModal';
 import mockData from '@/app/components/shared/data/mockData.json';
 import { useAuth } from '@/context/AuthContext';
 import { useFetch } from '@/hooks/useFetch';
@@ -26,6 +27,7 @@ const Inventory = () =>
     const { user } = useAuth();
     const storeId = user?.storeId;
     const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
+    const [isExternalStockModalOpen, setIsExternalStockModalOpen] = useState(false);
     const [config, setConfig] = useState<InventoryConfig>({columns: []});
     const [inventoryData, setInventoryData] = useState<StoreProduct[]>([]);
     const [filteredData, setFilteredData] = useState<StoreProduct[]>([]);
@@ -83,6 +85,16 @@ const Inventory = () =>
         setIsInventoryModalOpen(false);
     }
 
+    const handleExternalStockSuccess = async () =>
+    {
+        const products = await execute();
+        if (products)
+        {
+            setInventoryData(products);
+            setFilteredData(filterItems(products, currentFilters));
+        }
+    }
+
     return (
         <div className={styles.inventory}>
             <div className={styles.top}>
@@ -97,7 +109,10 @@ const Inventory = () =>
                         onResetFilters={handleResetFilters}
                     />
                 </div>
-                <button className={styles.orderoptionsbutton} onClick={handleOpenPaymentModal}>Generar Solicitud</button>
+                <div className={styles.buttonGroup}>
+                    <button className={styles.externalStockButton} onClick={() => setIsExternalStockModalOpen(true)}>Stock Externo</button>
+                    <button className={styles.orderoptionsbutton} onClick={handleOpenPaymentModal}>Generar Solicitud</button>
+                </div>
             </div>
             <InventoryTable
                 data={filteredData}
@@ -106,6 +121,12 @@ const Inventory = () =>
             {isInventoryModalOpen && (
                 <InventoryModal
                     onClose={handleClosePaymentModal}
+                />
+            )}
+            {isExternalStockModalOpen && (
+                <ExternalStockModal
+                    onClose={() => setIsExternalStockModalOpen(false)}
+                    onSuccess={handleExternalStockSuccess}
                 />
             )}
         </div>

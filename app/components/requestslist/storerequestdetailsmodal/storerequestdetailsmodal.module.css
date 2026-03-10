@@ -328,6 +328,30 @@
     height: 18px;
 }
 
+.completeButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: var(--green, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.completeButton:hover:not(:disabled) {
+    background: #15803d;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.completeButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .closeActionButton {
     padding: 0.875rem 1.5rem;
     background: transparent;
@@ -343,6 +367,11 @@
 .closeActionButton:hover {
     background: var(--surface-primary);
     border-color: var(--border-secondary);
+}
+
+.adjustedQuantity {
+    color: var(--orange, #ea580c);
+    font-weight: 600;
 }
 
 /* Responsive */

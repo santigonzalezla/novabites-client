@@ -1,0 +1,323 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal {
+    background: var(--surface-primary);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.headerInfo h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.headerInfo p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.closeBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.closeBtn:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+}
+
+.closeBtn svg { width: 18px; height: 18px; }
+
+/* ── Filtros ─────────────────────────────────────────────────────────────── */
+
+.supplierRow,
+.searchRow {
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.supplierSelect {
+    font-family: 'Satoshi', sans-serif;
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.supplierSelect:focus { border-color: var(--orange, #ea580c); }
+
+.searchInput {
+    font-family: 'Satoshi', sans-serif;
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus { border-color: var(--orange, #ea580c); }
+
+/* ── Lista de productos ───────────────────────────────────────────────────── */
+
+.productList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    padding: 2rem 0;
+}
+
+.productRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-primary);
+    transition: all 0.2s;
+    gap: 12px;
+}
+
+.productRow:hover {
+    background: var(--surface-secondary);
+}
+
+.productRowSelected {
+    border-color: var(--orange, #ea580c);
+    background: rgba(234, 88, 12, 0.05);
+}
+
+.productInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.productName {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.productCategory {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ── Control de cantidad ──────────────────────────────────────────────────── */
+
+.quantityControl {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.qtyBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+}
+
+.qtyBtn:hover:not(:disabled) {
+    border-color: var(--orange, #ea580c);
+    background: rgba(234, 88, 12, 0.08);
+    color: var(--orange, #ea580c);
+}
+
+.qtyBtn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.qtyInput {
+    font-family: 'Satoshi', sans-serif;
+    width: 52px;
+    height: 28px;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+}
+
+.qtyInput:focus { border-color: var(--orange, #ea580c); }
+
+/* Ocultar flechas nativas del input number */
+.qtyInput::-webkit-outer-spin-button,
+.qtyInput::-webkit-inner-spin-button { -webkit-appearance: none; }
+.qtyInput[type=number] { -moz-appearance: textfield; }
+
+/* ── Resumen ──────────────────────────────────────────────────────────────── */
+
+.summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(234, 88, 12, 0.08);
+    border-top: 1px solid rgba(234, 88, 12, 0.2);
+    font-size: 0.8125rem;
+    color: var(--orange, #ea580c);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* ── Acciones ────────────────────────────────────────────────────────────── */
+
+.actions {
+    display: flex;
+    gap: 10px;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-primary);
+    background: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.cancelBtn {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-primary);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.cancelBtn:hover { background: var(--surface-secondary); }
+
+.submitBtn {
+    flex: 2;
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: none;
+    background: var(--orange, #ea580c);
+    color: white;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background: #c2410c;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+    .modal { max-height: 100vh; border-radius: 0; }
+    .supplierRow { flex-direction: column; align-items: stretch; }
+}

@@ -7,7 +7,7 @@ import { useFetch } from '@/hooks/useFetch';
 import mockData from '@/app/components/shared/data/mockData.json';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { Store, StoreRequest } from '@/interfaces/interfaces';
+import { CategoryProduct, Store, StoreRequest } from '@/interfaces/interfaces';
 import { RequestStatus, RequestType, TypeStore } from '@/interfaces/enums';
 
 interface InventoryModalProps {
@@ -23,7 +23,8 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
     const [storeRequestData, setStoreRequestData] = useState<StoreRequestItem[]>([]);
     const [storeReturnData, setStoreReturnData] = useState<StoreRequestItem[]>([]);
     const [storeRelocateData, setStoreRelocateData] = useState<StoreRequestItem[]>([]);
-    const {data, isLoading, error} = useFetch('/api/product');
+    const { data } = useFetch('/api/product');
+    const { data: categoriesData } = useFetch<CategoryProduct[]>('/api/category-product');
     const {isLoading: isStoreRequestLoading, error: storeRequestError, execute} = useFetch('/api/store-request', {
         immediate: false
     });
@@ -327,6 +328,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                             <ModalTable
                                 data={storeRequestData}
                                 products={data}
+                                categories={categoriesData}
                                 config={mockData.storeRequest.config}
                                 onDataChange={handleDataChange}
                             />
@@ -335,6 +337,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                                 <ModalTable
                                     data={storeReturnData}
                                     products={data}
+                                    categories={categoriesData}
                                     config={mockData.storeReturn.config}
                                     onDataChange={handleDataChange}
                                 />
@@ -360,6 +363,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                                 <ModalTable
                                     data={storeRelocateData}
                                     products={data}
+                                    categories={categoriesData}
                                     config={mockData.storeRelocation.config}
                                     onDataChange={handleDataChange}
                                 />

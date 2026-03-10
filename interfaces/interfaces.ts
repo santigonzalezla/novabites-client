@@ -205,6 +205,7 @@ export interface StoreRequestDetail extends BaseEntity {
     requestId: string;
     productId: string;
     requestedQuantity: number;
+    approvedQuantity?: number | null;
     unitPrice?: number | string; // Decimal
     totalPrice?: number | string; // Decimal
     returnReason?: ReturnReason;

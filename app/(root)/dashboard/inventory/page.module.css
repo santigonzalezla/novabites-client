@@ -56,10 +56,17 @@
     transform: translateY(-50%);
 }
 
+.buttonGroup
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .orderoptionsbutton
 {
-    width: 100%;
-    max-width: 200px;
+    white-space: nowrap;
     font-family: 'Satoshi', sans-serif;
     font-weight: 400;
     font-size: 16px;
@@ -70,4 +77,25 @@
     background: #8200FF;
     box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
     cursor: pointer;
+}
+
+.externalStockButton
+{
+    white-space: nowrap;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--orange, #ea580c);
+    padding: 12px 20px;
+    height: 45px;
+    border-radius: 8px;
+    border: 1.5px solid var(--orange, #ea580c);
+    background: rgba(234, 88, 12, 0.07);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.externalStockButton:hover
+{
+    background: rgba(234, 88, 12, 0.15);
 }
