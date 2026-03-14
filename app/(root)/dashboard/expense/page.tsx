@@ -141,17 +141,6 @@ const DailySalesReport = () =>
     const isTodaySelected = isToday(selectedDate);
     const canPerformClosing = isTodaySelected && orders.length > 0;
 
-    if (ordersError || expensesError)
-    {
-        return (
-            <div className={styles.dailySales}>
-                <div className={styles.content}>
-                    <p>Error al cargar los datos</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.dailySales}>
             <div className={styles.top}>
@@ -235,9 +224,11 @@ const DailySalesReport = () =>
                 <div className={styles.section}>
                     <h2 className={styles.sectionTitle}>Productos Vendidos</h2>
                     {ordersLoading ? (
-                        <p>Cargando productos...</p>
+                        <p className={styles.loadingMessage}>Cargando productos...</p>
+                    ) : ordersError ? (
+                        <p className={styles.errorMessage}>No se pudieron cargar las ventas. Intenta recargar la página.</p>
                     ) : productsSummary.length === 0 ? (
-                        <p className={styles.emptyMessage}>No hay productos vendidos en esta fecha</p>
+                        <p className={styles.emptyMessage}>No hay ventas registradas para esta fecha</p>
                     ) : (
                         <div className={styles.tableContainer}>
                             <table className={styles.productsTable}>
