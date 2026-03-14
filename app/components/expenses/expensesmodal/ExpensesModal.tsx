@@ -2,7 +2,7 @@
 
 import { MouseEvent, useEffect, useState } from 'react';
 import styles from './expensesmodal.module.css';
-import { DailyExpense, Order, Product, StoreProduct } from '@/interfaces/interfaces';
+import { CategoryProduct, DailyExpense, Order, Product, StoreProduct } from '@/interfaces/interfaces';
 import { useFetch } from '@/hooks/useFetch';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -50,6 +50,7 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
     const [lastClosingTime, setLastClosingTime] = useState<Date | null>(null);
 
     const { data: storeData } = useFetch('/api/store');
+    const { data: categoriesData } = useFetch<CategoryProduct[]>('/api/category-product');
     const { isLoading: isLoadingProducts, execute: executeProducts } = useFetch<Product[]>('/api/product', { immediate: false });
     const { execute: executeStoreRequest } = useFetch('/api/store-request', { immediate: false });
     const { execute: executeExpense } = useFetch('/api/daily-expense', { immediate: false });
@@ -116,7 +117,7 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
                         const product = products.find(p => p.id === sold.productId);
                         if (!product) return null;
 
-                        return { product: product, requestStock: sold.quantitySold, returnReason: undefined };
+                        return { product: product, requestStock: sold.quantitySold, returnReason: undefined, categoryId: product.categoryId || '' };
                     }).filter(item => item !== null);
 
                     setStoreRequestData(preloadedData as StoreRequestItem[]);
@@ -461,6 +462,7 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
                                 <ModalTable
                                     data={storeRequestData}
                                     products={allProducts}
+                                    categories={categoriesData}
                                     config={mockData.storeRequest.config}
                                     onDataChange={handleDataChange}
                                 />

@@ -98,6 +98,7 @@ const ModalTable = ({ data, products, categories, config, onDataChange }: ModalT
         updatedData[pickerRowIndex] = {
             ...updatedData[pickerRowIndex],
             product,
+            categoryId: pickerCategoryId || updatedData[pickerRowIndex].categoryId || product.categoryId || '',
         };
         setTableData(updatedData);
         onDataChange?.(updatedData);
@@ -153,14 +154,31 @@ const ModalTable = ({ data, products, categories, config, onDataChange }: ModalT
         } catch { return defaultValue; }
     };
 
+    const handleChangeProduct = (rowIndex: number, effectiveCategoryId: string) =>
+    {
+        const updatedData = [...tableData];
+        updatedData[rowIndex] = {
+            ...updatedData[rowIndex],
+            categoryId: effectiveCategoryId,
+            product: { id: '', name: '', centralStock: 0, minStock: 0 },
+        };
+        setTableData(updatedData);
+        onDataChange?.(updatedData);
+        setPickerRowIndex(rowIndex);
+        setPickerCategoryId(effectiveCategoryId);
+        setPickerSearch('');
+    };
+
     const renderCellValue = (column: Column, value: any, row: StoreRequestItem, rowIndex: number) =>
     {
         if (column.key === 'product.name')
         {
+            const effectiveCategoryId = row.categoryId || row.product?.categoryId || row.product?.category?.id || '';
+
             return (
                 <div className={styles.productCellWrapper}>
                     <select
-                        value={row.categoryId || ''}
+                        value={effectiveCategoryId}
                         onChange={e => handleCategoryChange(rowIndex, e.target.value)}
                         className={styles.categoryselect}
                     >
@@ -170,9 +188,14 @@ const ModalTable = ({ data, products, categories, config, onDataChange }: ModalT
                         ))}
                     </select>
                     {row.product?.id && (
-                        <span className={styles.selectedProductBadge}>
-                            ✓ {row.product.name}
-                        </span>
+                        <div className={styles.selectedProductBadge}>
+                            <span>✓ {row.product.name}</span>
+                            <button
+                                className={styles.changePill}
+                                onClick={() => handleChangeProduct(rowIndex, effectiveCategoryId)}
+                                title="Cambiar producto"
+                            >×</button>
+                        </div>
                     )}
                 </div>
             );
