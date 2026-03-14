@@ -11,10 +11,12 @@ import { CustomOrder } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import AddOrderModal from '@/app/components/order/addordermodal/AddOrderModal';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
 
 const Order = () =>
 {
-    const { isLoading, error, execute } = useFetch<CustomOrder[]>('/api/custom-order');
+    const { user } = useAuth();
+    const { isLoading, error, execute } = useFetch<CustomOrder[]>(`/api/custom-order?storeId=${user?.storeId ?? ''}`);
     const [allOrders, setAllOrders] = useState<CustomOrder[]>([]);
     const [statusOrder, setStatusOrder] = useState<StatusOrder | 'all'>('all');
     const [filteredData, setFilteredData] = useState<CustomOrder[]>([]);
@@ -277,15 +279,21 @@ const Order = () =>
                 <button onClick={handleOpenAddOrderModal}>Agregar Pedido</button>
             </div>
             <div className={styles.grid}>
-                {filteredData?.map((orderData, index) => (
-                    <OrderCard
-                        index={index}
-                        customOrder={orderData}
-                        key={index}
-                        setSelectedOrder={handleSetSelectedOrder}
-                        onCompleteOrder={handleCompleteOrder}
-                    />
-                ))}
+                {filteredData?.length === 0 ? (
+                    <div className={styles.empty}>
+                        <p>Aún no se han registrado pedidos</p>
+                    </div>
+                ) : (
+                    filteredData?.map((orderData, index) => (
+                        <OrderCard
+                            index={index}
+                            customOrder={orderData}
+                            key={index}
+                            setSelectedOrder={handleSetSelectedOrder}
+                            onCompleteOrder={handleCompleteOrder}
+                        />
+                    ))
+                )}
             </div>
 
             {isOrderModalOpen && (

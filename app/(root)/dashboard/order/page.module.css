@@ -74,3 +74,14 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+.empty
+{
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--text-secondary, #888);
+    font-size: 1rem;
+}
