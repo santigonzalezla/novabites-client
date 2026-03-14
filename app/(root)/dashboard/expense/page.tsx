@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import styles from './page.module.css';
-import { Order, DailyExpense } from '@/interfaces/interfaces';
+import { Order, DailyExpense, CustomOrder } from '@/interfaces/interfaces';
 import { Calendar, DollarSign, TrendingUp, TrendingDown } from '@/app/components/svg';
 import { useFetch } from '@/hooks/useFetch';
 import { useAuth } from '@/context/AuthContext';
@@ -31,6 +31,7 @@ const DailySalesReport = () =>
     const [selectedDate, setSelectedDate] = useState(getTodayLocal());
     const [orders, setOrders] = useState<Order[]>([]);
     const [expenses, setExpenses] = useState<DailyExpense[]>([]);
+    const [completedCustomOrders, setCompletedCustomOrders] = useState<CustomOrder[]>([]);
     const [pendingExpenses, setPendingExpenses] = useState<PendingExpense[]>([]);
     const [showClosingModal, setShowClosingModal] = useState(false);
     const [closingsCount, setClosingsCount] = useState(0);
@@ -44,6 +45,10 @@ const DailySalesReport = () =>
     );
     const { execute: fetchClosingsCount } = useFetch<{ count: number }>(
         `/api/cash-closing/count/${user?.storeId}/${localToUTC(selectedDate)}`,
+        { immediate: false }
+    );
+    const { execute: fetchCompletedCustomOrders } = useFetch<CustomOrder[]>(
+        `/api/custom-order?storeId=${user?.storeId}&status=COMPLETED&updatedAtDate=${selectedDate}`,
         { immediate: false }
     );
 
@@ -61,6 +66,9 @@ const DailySalesReport = () =>
 
                 const closingsData = await fetchClosingsCount();
                 if (closingsData) setClosingsCount(closingsData.count);
+
+                const customOrdersData = await fetchCompletedCustomOrders();
+                if (customOrdersData) setCompletedCustomOrders(customOrdersData);
             }
         };
 
@@ -87,17 +95,50 @@ const DailySalesReport = () =>
             });
         });
 
+        completedCustomOrders.forEach(order =>
+        {
+            order.products?.forEach(item => {
+                const productId = item.productId || 'unknown';
+                const productName = item.product?.name || 'Producto desconocido';
+                const quantity = item.quantity;
+                const price = typeof item.totalPrice === 'string' ? parseFloat(item.totalPrice) : item.totalPrice as number;
+
+                if (!summary[productId]) summary[productId] = { productId, productName, quantitySold: 0, totalRevenue: 0 };
+
+                summary[productId].quantitySold += quantity;
+                summary[productId].totalRevenue += price;
+            });
+
+            order.details?.forEach((detail, idx) => {
+                const key = `cake-${order.id}-${idx}`;
+                const pounds = detail.pounds ?? 0;
+                const tiers = detail.tiers ?? 0;
+                const productName = `Torta personalizada - ${pounds}lb, ${tiers} ${tiers === 1 ? 'piso' : 'pisos'}`;
+                const price = typeof detail.price === 'string' ? parseFloat(detail.price) : detail.price as number;
+
+                summary[key] = { productId: key, productName, quantitySold: 1, totalRevenue: price };
+            });
+        });
+
         return Object.values(summary);
-    }, [orders]);
+    }, [orders, completedCustomOrders]);
 
     const totalRevenue = useMemo(() =>
     {
-        return orders.reduce((sum, order) =>
+        const ordersRevenue = orders.reduce((sum, order) =>
         {
             const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice;
             return sum + price;
         }, 0);
-    }, [orders]);
+
+        const customOrdersRevenue = completedCustomOrders.reduce((sum, order) =>
+        {
+            const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice;
+            return sum + (price as number);
+        }, 0);
+
+        return ordersRevenue + customOrdersRevenue;
+    }, [orders, completedCustomOrders]);
 
     const totalExpenses = useMemo(() =>
     {
@@ -139,7 +180,7 @@ const DailySalesReport = () =>
     };
 
     const isTodaySelected = isToday(selectedDate);
-    const canPerformClosing = isTodaySelected && orders.length > 0;
+    const canPerformClosing = isTodaySelected && (orders.length > 0 || completedCustomOrders.length > 0);
 
     return (
         <div className={styles.dailySales}>
@@ -150,7 +191,7 @@ const DailySalesReport = () =>
                     className={styles.closingButton}
                     onClick={() => setShowClosingModal(true)}
                     disabled={!canPerformClosing}
-                    title={!isTodaySelected ? 'Solo puedes hacer cierre de caja del día actual' : !orders.length ? 'No hay órdenes para cerrar' : ''}
+                    title={!isTodaySelected ? 'Solo puedes hacer cierre de caja del día actual' : (orders.length === 0 && completedCustomOrders.length === 0) ? 'No hay órdenes para cerrar' : ''}
                 >
                     📊 Realizar Cierre de Caja
                     {closingsCount > 0 && ` (${closingsCount})`}
@@ -191,7 +232,10 @@ const DailySalesReport = () =>
                         <div className={styles.cardContent}>
                             <span className={styles.cardLabel}>Ingresos del Día</span>
                             <span className={styles.cardValue}>{formatPrice(totalRevenue)}</span>
-                            <span className={styles.cardSubtext}>{orders.length} órdenes</span>
+                            <span className={styles.cardSubtext}>
+                                {orders.length + completedCustomOrders.length} órdenes
+                                {completedCustomOrders.length > 0 && ` (${completedCustomOrders.length} personalizadas)`}
+                            </span>
                         </div>
                     </div>
 
@@ -284,6 +328,7 @@ const DailySalesReport = () =>
                 <ExpensesModal
                     onClose={() => setShowClosingModal(false)}
                     orders={orders}
+                    completedCustomOrders={completedCustomOrders}
                     selectedDate={selectedDate}
                     pendingExpenses={pendingExpenses}
                     onClosingComplete={handleClosingComplete}

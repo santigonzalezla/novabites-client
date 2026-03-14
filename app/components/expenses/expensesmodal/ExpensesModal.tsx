@@ -2,7 +2,7 @@
 
 import { MouseEvent, useEffect, useState } from 'react';
 import styles from './expensesmodal.module.css';
-import { CategoryProduct, DailyExpense, Order, Product, StoreProduct } from '@/interfaces/interfaces';
+import { CategoryProduct, CustomOrder, DailyExpense, Order, Product, StoreProduct } from '@/interfaces/interfaces';
 import { useFetch } from '@/hooks/useFetch';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ import { formatDateLocal, formatTimeLocal, isAfter } from '@/lib/dateUtils';
 interface ClosingModalProps {
     onClose: () => void;
     orders: Order[];
+    completedCustomOrders: CustomOrder[];
     selectedDate: string;
     pendingExpenses: PendingExpense[];
     onClosingComplete: (savedExpenses: DailyExpense[]) => void;
@@ -39,7 +40,7 @@ interface LastClosing {
     }[];
 }
 
-const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosingComplete, closingsCount }: ClosingModalProps) =>
+const ExpensesModal = ({ onClose, orders, completedCustomOrders, selectedDate, pendingExpenses, onClosingComplete, closingsCount }: ClosingModalProps) =>
 {
     const { user } = useAuth();
     const [closingNote, setClosingNote] = useState('');
@@ -134,7 +135,7 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
 
     const isDataComplete = (): boolean =>
     {
-        if (storeRequestData.length === 0) return false;
+        if (storeRequestData.length === 0) return true;
 
         return storeRequestData.every(item =>
         {
@@ -158,11 +159,19 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
 
     const calculateTotals = () =>
     {
-        const totalRevenue = orders.reduce((sum, order) =>
+        const ordersRevenue = orders.reduce((sum, order) =>
         {
             const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice;
             return sum + price;
         }, 0);
+
+        const customOrdersRevenue = completedCustomOrders.reduce((sum, order) =>
+        {
+            const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice;
+            return sum + (price as number);
+        }, 0);
+
+        const totalRevenue = ordersRevenue + customOrdersRevenue;
 
         const totalExpenses = pendingExpenses.reduce((sum, expense) =>
         {
@@ -244,46 +253,53 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
                 }
             }
 
-            const details = storeRequestData.map((item: any) => ({
-                productId: item.product.id,
-                requestedQuantity: item.requestStock,
-                unitPrice: item.product.basePrice,
-                totalPrice: (item.product.basePrice as number) * item.requestStock
-            }));
-
-            const centralStore = storeData?.find((store: any) => store.type === TypeStore.PRINCIPAL);
-
-            if (!centralStore) throw new Error('No se encontró la tienda central');
-
-            const storeRequest = {
-                type: RequestType.SUPPLY_REQUEST,
-                status: RequestStatus.PENDING,
-                requestingStoreId: user?.storeId,
-                requestingUserId: user?.userId,
-                targetStoreId: centralStore.id,
-                requestedDate: new Date().toISOString(),
-                details: details
-            };
-
-            const newStoreRequest = await executeStoreRequest({
-                method: 'POST',
-                body: storeRequest
-            });
-
-            if (!newStoreRequest) throw new Error('Error al crear la solicitud de reposición');
-
             const { totalRevenue, totalExpenses, netProfit } = calculateTotals();
+
+            let storeRequestId: string | undefined;
+
+            if (storeRequestData.length > 0)
+            {
+                const details = storeRequestData.map((item: any) => ({
+                    productId: item.product.id,
+                    requestedQuantity: item.requestStock,
+                    unitPrice: item.product.basePrice,
+                    totalPrice: (item.product.basePrice as number) * item.requestStock
+                }));
+
+                const centralStore = storeData?.find((store: any) => store.type === TypeStore.PRINCIPAL);
+
+                if (!centralStore) throw new Error('No se encontró la tienda central');
+
+                const storeRequest = {
+                    type: RequestType.SUPPLY_REQUEST,
+                    status: RequestStatus.PENDING,
+                    requestingStoreId: user?.storeId,
+                    requestingUserId: user?.userId,
+                    targetStoreId: centralStore.id,
+                    requestedDate: new Date().toISOString(),
+                    details: details
+                };
+
+                const newStoreRequest = await executeStoreRequest({
+                    method: 'POST',
+                    body: storeRequest
+                });
+
+                if (!newStoreRequest) throw new Error('Error al crear la solicitud de reposición');
+
+                storeRequestId = newStoreRequest.id;
+            }
 
             const cashClosingData = {
                 storeId: user?.storeId,
                 userId: user?.userId,
                 closingDate: selectedDate,
                 description: closingNote,
-                totalOrders: orders.length,
+                totalOrders: orders.length + completedCustomOrders.length,
                 totalRevenue: totalRevenue,
                 totalExpenses: totalExpenses,
                 netProfit: netProfit,
-                storeRequestId: newStoreRequest.id,
+                storeRequestId: storeRequestId,
                 orderIds: orders.map(order => order.id),
                 expenseIds: savedExpenses.map(expense => expense.id)
             };
@@ -297,9 +313,7 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
             {
                 toast.success('Cierre de caja realizado exitosamente', {
                     description: `
-                        Solicitud de reposición: ${storeRequestData.length} productos
-                        ${savedExpenses.length > 0 ? `\nGastos guardados: ${savedExpenses.length}` : ''}
-                        \nCierre #${cashClosing.numId} registrado
+                        ${storeRequestData.length > 0 ? `Solicitud de reposición: ${storeRequestData.length} productos\n` : ''}${savedExpenses.length > 0 ? `Gastos guardados: ${savedExpenses.length}\n` : ''}Cierre #${cashClosing.numId} registrado
                     `,
                     duration: 5000,
                     richColors: true,
@@ -382,9 +396,15 @@ const ExpensesModal = ({ onClose, orders, selectedDate, pendingExpenses, onClosi
                     {/* Resumen del día */}
                     <div className={styles.summarySection}>
                         <div className={styles.summaryItem}>
-                            <span className={styles.summaryLabel}>Total de órdenes</span>
+                            <span className={styles.summaryLabel}>Órdenes convencionales</span>
                             <span className={styles.summaryValue}>{orders.length}</span>
                         </div>
+                        {completedCustomOrders.length > 0 && (
+                            <div className={styles.summaryItem}>
+                                <span className={styles.summaryLabel}>Órdenes personalizadas</span>
+                                <span className={styles.summaryValue}>{completedCustomOrders.length}</span>
+                            </div>
+                        )}
                         <div className={styles.summaryItem}>
                             <span className={styles.summaryLabel}>Productos vendidos</span>
                             <span className={styles.summaryValue}>{productsSold.length}</span>

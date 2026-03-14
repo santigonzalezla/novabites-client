@@ -26,20 +26,24 @@ const Order = () =>
 
     useEffect(() =>
     {
+        if (!user?.storeId) return;
+
         const fetchOrders = async () =>
         {
             const orders = await execute();
 
             if (orders)
             {
-                console.log(orders);
+                console.log('storeId del usuario:', user?.storeId);
+                console.log('Total pedidos recibidos:', orders.length);
+                orders.forEach(o => console.log(`Pedido #${o.numId} - tienda: ${o.store?.id} (${o.store?.name})`));
                 setAllOrders(orders);
                 setFilteredData(orders);
             }
         }
 
         fetchOrders();
-    }, []);
+    }, [user?.storeId]);
 
     useEffect(() =>
     {
