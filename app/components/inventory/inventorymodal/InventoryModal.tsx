@@ -7,14 +7,23 @@ import { useFetch } from '@/hooks/useFetch';
 import mockData from '@/app/components/shared/data/mockData.json';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { CategoryProduct, Store, StoreRequest } from '@/interfaces/interfaces';
+import { CategoryProduct, Store, StoreProduct, StoreRequest } from '@/interfaces/interfaces';
 import { RequestStatus, RequestType, TypeStore } from '@/interfaces/enums';
 
 interface InventoryModalProps {
     onClose: () => void;
+    onSuccess: () => void;
 }
 
-const InventoryModal = ({ onClose }: InventoryModalProps) =>
+const returnReasonLabels: Record<string, string> = {
+    DAMAGED: 'Dañado',
+    EXPIRED: 'Vencido',
+    INCORRECT: 'Incorrecto',
+    EXCESS_STOCK: 'Exceso de stock',
+    OTHER: 'Otro',
+};
+
+const InventoryModal = ({ onClose, onSuccess }: InventoryModalProps) =>
 {
     const { user } = useAuth();
     const [activeOption, setActiveOption] = useState('request');
@@ -23,14 +32,40 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
     const [storeRequestData, setStoreRequestData] = useState<StoreRequestItem[]>([]);
     const [storeReturnData, setStoreReturnData] = useState<StoreRequestItem[]>([]);
     const [storeRelocateData, setStoreRelocateData] = useState<StoreRequestItem[]>([]);
+    const [showReturnConfirm, setShowReturnConfirm] = useState(false);
     const { data } = useFetch('/api/product');
+    const { data: storeProductsData } = useFetch<StoreProduct[]>(`/api/store-product/store/${user?.storeId}`);
     const { data: categoriesData } = useFetch<CategoryProduct[]>('/api/category-product');
+
+    // Productos enriquecidos con currentStock de la tienda (para devoluciones — solo los que tiene la tienda)
+    const storeOwnProducts = storeProductsData
+        ?.filter(sp => sp.available && sp.currentStock > 0 && sp.product)
+        .map(sp => ({ ...sp.product!, currentStock: sp.currentStock })) ?? null;
+
+    // Todos los productos enriquecidos con el currentStock de la tienda (para solicitudes — puede pedir cualquier producto)
+    const allProductsWithStoreStock = (data ?? []).map((p: any) => {
+        const sp = storeProductsData?.find(s => s.productId === p.id);
+        return { ...p, currentStock: sp?.currentStock ?? 0 };
+    });
     const {isLoading: isStoreRequestLoading, error: storeRequestError, execute} = useFetch('/api/store-request', {
         immediate: false
     });
     const { data: storeData, isLoading: isStoreLoading, error: storeError, execute: executeStore} = useFetch<Store[]>('/api/store', {
         immediate: false
     });
+
+    useEffect(() =>
+    {
+        if (storeRequestError)
+        {
+            toast.error('Error al procesar la solicitud', {
+                description: storeRequestError,
+                duration: 5000,
+                richColors: true,
+                position: 'top-right'
+            });
+        }
+    }, [storeRequestError]);
 
     useEffect(() =>
     {
@@ -139,6 +174,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                     position: 'top-right'
                 });
 
+                onSuccess();
                 onClose();
             }
         }
@@ -203,6 +239,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                     position: 'top-right'
                 });
 
+                onSuccess();
                 onClose();
             }
         }
@@ -278,6 +315,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                 setSelectedTargetStore('');
                 setStoreRelocateData([]);
 
+                onSuccess();
                 onClose();
             }
         }
@@ -327,7 +365,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                         {activeOption === 'request' ? (
                             <ModalTable
                                 data={storeRequestData}
-                                products={data}
+                                products={allProductsWithStoreStock}
                                 categories={categoriesData}
                                 config={mockData.storeRequest.config}
                                 onDataChange={handleDataChange}
@@ -336,7 +374,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                             <div className={styles.returnTable}>
                                 <ModalTable
                                     data={storeReturnData}
-                                    products={data}
+                                    products={storeOwnProducts}
                                     categories={categoriesData}
                                     config={mockData.storeReturn.config}
                                     onDataChange={handleDataChange}
@@ -362,7 +400,7 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                                 </select>
                                 <ModalTable
                                     data={storeRelocateData}
-                                    products={data}
+                                    products={storeOwnProducts}
                                     categories={categoriesData}
                                     config={mockData.storeRelocation.config}
                                     onDataChange={handleDataChange}
@@ -376,13 +414,54 @@ const InventoryModal = ({ onClose }: InventoryModalProps) =>
                             className={styles.sendButton}
                             onClick={() => activeOption === 'request'
                                 ? createRequest(storeRequestData)
-                                : activeOption === 'return' ? createReturn(storeReturnData) : createRelocation(storeRelocateData)}
+                                : activeOption === 'return' ? setShowReturnConfirm(true) : createRelocation(storeRelocateData)}
                         >
                             Enviar
                         </button>
                     </div>
                 </div>
             </div>
+            {showReturnConfirm && (
+                <div className={styles.confirmOverlay} onClick={() => setShowReturnConfirm(false)}>
+                    <div className={styles.confirmModal} onClick={e => e.stopPropagation()}>
+                        <h2 className={styles.confirmTitle}>Confirmar Devolución</h2>
+                        <p className={styles.confirmSubtitle}>
+                            Se enviará una solicitud de devolución con los siguientes productos:
+                        </p>
+                        <div className={styles.confirmTable}>
+                            <div className={styles.confirmTableHeader}>
+                                <span>Producto</span>
+                                <span>Cantidad</span>
+                                <span>Motivo</span>
+                            </div>
+                            {storeReturnData.map((item, i) => (
+                                <div key={i} className={styles.confirmTableRow}>
+                                    <span>{item.product?.name || '—'}</span>
+                                    <span>{item.requestStock}</span>
+                                    <span>{returnReasonLabels[item.returnReason || ''] || item.returnReason || '—'}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <p className={styles.confirmNote}>
+                            El stock se reducirá una vez que la devolución sea aprobada y completada.
+                        </p>
+                        <div className={styles.confirmButtons}>
+                            <button className={styles.confirmCancel} onClick={() => setShowReturnConfirm(false)}>
+                                Cancelar
+                            </button>
+                            <button
+                                className={styles.confirmSend}
+                                onClick={() => {
+                                    setShowReturnConfirm(false);
+                                    createReturn(storeReturnData);
+                                }}
+                            >
+                                Confirmar devolución
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

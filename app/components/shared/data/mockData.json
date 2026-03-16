@@ -22,7 +22,7 @@
     "config": {
       "columns": [
         {"key": "product.name", "header": "NOMBRE", "width": "15%"},
-        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.currentStock", "header": "STOCK EN TIENDA", "width": "10%"},
         {"key": "product.minStock", "header": "MIN STOCK", "width": "8%"},
         {"key": "requestStock", "header": "SOLICITUD", "width": "8%"}
       ],
@@ -37,7 +37,7 @@
     "config": {
       "columns": [
         {"key": "product.name", "header": "NOMBRE", "width": "15%"},
-        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.currentStock", "header": "STOCK EN TIENDA", "width": "10%"},
         {"key": "product.minStock", "header": "MIN STOCK", "width": "8%"},
         {"key": "requestStock", "header": "SOLICITUD", "width": "8%"}
       ],
@@ -52,7 +52,7 @@
     "config": {
       "columns": [
         {"key": "product.name", "header": "NOMBRE", "width": "15%"},
-        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.currentStock", "header": "STOCK EN TIENDA", "width": "10%"},
         {"key": "requestStock", "header": "CANTIDAD", "width": "8%"},
         {"key": "returnReason", "header": "MOTIVO", "width": "10%"}
       ],
@@ -67,7 +67,7 @@
     "config": {
       "columns": [
         {"key": "product.name", "header": "NOMBRE", "width": "15%"},
-        {"key": "product.centralStock", "header": "STOCK ACTUAL", "width": "10%"},
+        {"key": "product.currentStock", "header": "STOCK EN TIENDA", "width": "10%"},
         {"key": "requestStock", "header": "CANTIDAD", "width": "8%"}
       ],
       "itemsPerPage": 5,

@@ -121,6 +121,7 @@ const Inventory = () =>
             {isInventoryModalOpen && (
                 <InventoryModal
                     onClose={handleClosePaymentModal}
+                    onSuccess={handleExternalStockSuccess}
                 />
             )}
             {isExternalStockModalOpen && (
