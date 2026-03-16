@@ -340,11 +340,32 @@ const ExpensesModal = ({ onClose, orders, completedCustomOrders, selectedDate, p
         }
     };
 
-    const formatPrice = (amount: string) =>
+    const formatPrice = (amount: string | number) =>
     {
-        const numAmount = parseFloat(amount) || 0;
+        const numAmount = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
         return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(numAmount);
     };
+
+    const paymentBreakdown = (() =>
+    {
+        const totals: Record<string, number> = { Cash: 0, Card: 0, Transfer: 0 };
+
+        orders.forEach(order =>
+        {
+            const method = order.paymentMethod || 'Cash';
+            const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice;
+            totals[method] = (totals[method] || 0) + price;
+        });
+
+        // Custom orders are always cash for now
+        completedCustomOrders.forEach(order =>
+        {
+            const price = typeof order.totalPrice === 'string' ? parseFloat(order.totalPrice) : order.totalPrice as number;
+            totals['Cash'] += price;
+        });
+
+        return totals;
+    })();
 
     const totalPendingExpenses = pendingExpenses.reduce((sum, exp) =>
     {
@@ -419,6 +440,38 @@ const ExpensesModal = ({ onClose, orders, completedCustomOrders, selectedDate, p
                             <div className={styles.summaryItem}>
                                 <span className={styles.summaryLabel}>Gastos pendientes</span>
                                 <span className={styles.summaryValue}>{pendingExpenses.length}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Desglose por método de pago */}
+                    <div className={styles.paymentBreakdown}>
+                        <span className={styles.paymentBreakdownTitle}>Desglose por método de pago</span>
+                        {paymentBreakdown['Cash'] > 0 && (
+                            <div className={styles.paymentItem}>
+                                <span className={styles.paymentIcon}>💵</span>
+                                <div className={styles.paymentInfo}>
+                                    <span className={styles.paymentLabel}>Efectivo</span>
+                                    <span className={styles.paymentAmount}>{formatPrice(paymentBreakdown['Cash'])}</span>
+                                </div>
+                            </div>
+                        )}
+                        {paymentBreakdown['Card'] > 0 && (
+                            <div className={styles.paymentItem}>
+                                <span className={styles.paymentIcon}>💳</span>
+                                <div className={styles.paymentInfo}>
+                                    <span className={styles.paymentLabel}>Tarjeta</span>
+                                    <span className={styles.paymentAmount}>{formatPrice(paymentBreakdown['Card'])}</span>
+                                </div>
+                            </div>
+                        )}
+                        {paymentBreakdown['Transfer'] > 0 && (
+                            <div className={styles.paymentItem}>
+                                <span className={styles.paymentIcon}>📲</span>
+                                <div className={styles.paymentInfo}>
+                                    <span className={styles.paymentLabel}>Transferencia</span>
+                                    <span className={styles.paymentAmount}>{formatPrice(paymentBreakdown['Transfer'])}</span>
+                                </div>
                             </div>
                         )}
                     </div>
