@@ -27,7 +27,7 @@ const QrOrderForm = ({ token, userId, storeId, onSuccess }: QrOrderFormProps) =>
     const [depositAmount, setDepositAmount] = useState<string>('');
     const [deliveryDate, setDeliveryDate] = useState<string>('');
     const [detailOrders, setDetailOrders] = useState<Partial<DetailCustomOrder>[]>([
-        { imageUrl: '', pounds: 0, tiers: 0 }
+        { imageUrl: '', pounds: 0, tiers: 0, description: '' }
     ]);
     const [productList, setProductList] = useState<{ product: Product, quantity: number }[]>([]);
     const [imageFiles, setImageFiles] = useState<Map<number, File>>(new Map());
@@ -371,7 +371,7 @@ const QrOrderForm = ({ token, userId, storeId, onSuccess }: QrOrderFormProps) =>
                 <div className={styles.sectiontop}>
                     <h3>Pedido Personalizado</h3>
                     <button
-                        onClick={() => setDetailOrders([...detailOrders, { imageUrl: '', pounds: 0, tiers: 0 }])}
+                        onClick={() => setDetailOrders([...detailOrders, { imageUrl: '', pounds: 0, tiers: 0, description: '' }])}
                     >
                         + Agregar Torta
                     </button>
@@ -380,71 +380,83 @@ const QrOrderForm = ({ token, userId, storeId, onSuccess }: QrOrderFormProps) =>
                 <div className={styles.detailList}>
                     {detailOrders.map((detail, index) => (
                         <div className={styles.inputDetailGroup} key={index}>
-                            <div className={styles.fileInput}>
+                            <div className={styles.detailInputRow}>
+                                <div className={styles.fileInput}>
+                                    <input
+                                        type="file"
+                                        id={`qr-image-${index}`}
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        ref={(el) => { if (el) fileInputRefs.current.set(index, el); }}
+                                        onChange={(e) =>
+                                        {
+                                            const file = e.target.files?.[0];
+                                            if (file) handleImageChange(index, file);
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className={styles.customFileButton}
+                                        onClick={() => fileInputRefs.current.get(index)?.click()}
+                                    >
+                                        {imagePreviews.has(index) ? (
+                                            <img src={imagePreviews.get(index)} alt="Preview" className={styles.imagePreview} />
+                                        ) : (
+                                            <AddItem />
+                                        )}
+                                        {imageFiles.has(index) ? <Check /> : ''}
+                                    </button>
+                                </div>
                                 <input
-                                    type="file"
-                                    id={`qr-image-${index}`}
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                    ref={(el) => { if (el) fileInputRefs.current.set(index, el); }}
-                                    onChange={(e) =>
-                                    {
-                                        const file = e.target.files?.[0];
-                                        if (file) handleImageChange(index, file);
+                                    type="number"
+                                    placeholder="Libras"
+                                    value={detail.pounds || ''}
+                                    onChange={(e) => {
+                                        const newDetailOrders = [...detailOrders];
+                                        newDetailOrders[index].pounds = parseInt(e.target.value);
+                                        setDetailOrders(newDetailOrders);
                                     }}
                                 />
-                                <button
-                                    type="button"
-                                    className={styles.customFileButton}
-                                    onClick={() => fileInputRefs.current.get(index)?.click()}
-                                >
-                                    {imagePreviews.has(index) ? (
-                                        <img src={imagePreviews.get(index)} alt="Preview" className={styles.imagePreview} />
-                                    ) : (
-                                        <AddItem />
-                                    )}
-                                    {imageFiles.has(index) ? <Check /> : ''}
-                                </button>
+                                <input
+                                    type="number"
+                                    placeholder="Niveles"
+                                    value={detail.tiers || ''}
+                                    onChange={(e) => {
+                                        const newDetailOrders = [...detailOrders];
+                                        newDetailOrders[index].tiers = parseInt(e.target.value);
+                                        setDetailOrders(newDetailOrders);
+                                    }}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Precio"
+                                    value={detail.price || ''}
+                                    onChange={(e) => {
+                                        const newDetailOrders = [...detailOrders];
+                                        newDetailOrders[index].price = parseFloat(e.target.value);
+                                        setDetailOrders(newDetailOrders);
+                                    }}
+                                />
+                                {detailOrders.length > 1 && (
+                                    <button
+                                        type="button"
+                                        className={styles.removeButton}
+                                        onClick={() => handleRemoveDetail(index)}
+                                    >
+                                        ×
+                                    </button>
+                                )}
                             </div>
-                            <input
-                                type="number"
-                                placeholder="Libras"
-                                value={detail.pounds || ''}
+                            <textarea
+                                placeholder="Descripción (opcional)"
+                                value={detail.description || ''}
                                 onChange={(e) => {
                                     const newDetailOrders = [...detailOrders];
-                                    newDetailOrders[index].pounds = parseInt(e.target.value);
+                                    newDetailOrders[index].description = e.target.value;
                                     setDetailOrders(newDetailOrders);
                                 }}
+                                className={styles.detailDescription}
                             />
-                            <input
-                                type="number"
-                                placeholder="Niveles"
-                                value={detail.tiers || ''}
-                                onChange={(e) => {
-                                    const newDetailOrders = [...detailOrders];
-                                    newDetailOrders[index].tiers = parseInt(e.target.value);
-                                    setDetailOrders(newDetailOrders);
-                                }}
-                            />
-                            <input
-                                type="number"
-                                placeholder="Precio"
-                                value={detail.price || ''}
-                                onChange={(e) => {
-                                    const newDetailOrders = [...detailOrders];
-                                    newDetailOrders[index].price = parseFloat(e.target.value);
-                                    setDetailOrders(newDetailOrders);
-                                }}
-                            />
-                            {detailOrders.length > 1 && (
-                                <button
-                                    type="button"
-                                    className={styles.removeButton}
-                                    onClick={() => handleRemoveDetail(index)}
-                                >
-                                    ×
-                                </button>
-                            )}
                         </div>
                     ))}
                 </div>

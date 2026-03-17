@@ -43,6 +43,12 @@ const DetailCustomOrderModal = ({ detail, onClose }: DetailCustomOrderModalProps
                             <span className={styles.detailLabel}>Precio</span>
                             <span className={styles.detailValue}>${detail.price}</span>
                         </div>
+                        {detail.description && (
+                            <div className={styles.detailRow}>
+                                <span className={styles.detailLabel}>Descripción</span>
+                                <span className={styles.detailValue}>{detail.description}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

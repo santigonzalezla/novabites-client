@@ -156,15 +156,44 @@
 .inputDetailGroup
 {
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.detailInputRow
+{
+    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 5px;
     width: 100%;
 }
 
-.inputDetailGroup input
+.detailInputRow input
 {
     width: 100%;
+}
+
+.detailDescription
+{
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--bg-primary);
+    background-color: #3D4142;
+    resize: none;
+    min-height: 60px;
+    transition: border-color 0.2s ease;
+}
+
+.detailDescription:focus
+{
+    outline: none;
+    border-color: var(--orange, #ff6b35);
 }
 
 .detailList
