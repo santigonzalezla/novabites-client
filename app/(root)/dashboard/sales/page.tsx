@@ -275,11 +275,14 @@ const Sales = () =>
             details: order.cartItems.map((item: Product) => {
                 const stockInfo = getProductStock(item.id!);
                 const itemPrice = Number(stockInfo.price) || 0;
+                const qty = order.quantities[item.id] || 0;
+                const discount = order.discounts?.[item.id] || 0;
 
                 return {
                     productId: item.id,
-                    quantity: order.quantities[item.id] || 0,
-                    price: itemPrice * (order.quantities[item.id] || 0)
+                    quantity: qty,
+                    price: (itemPrice * qty) - discount,
+                    discount: discount,
                 };
             }) as DetailOrder[],
             totalPrice: String(order.total),

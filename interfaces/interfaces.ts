@@ -338,6 +338,7 @@ export interface DetailOrder extends BaseEntity {
     productId?: string;
     quantity: number;
     price: number | string; // Decimal
+    discount?: number | string; // Decimal
 
     // Relations
     order?: Order;

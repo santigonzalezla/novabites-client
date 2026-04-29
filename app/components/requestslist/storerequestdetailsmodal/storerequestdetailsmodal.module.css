@@ -328,6 +328,30 @@
     height: 18px;
 }
 
+.approveButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: var(--orange, #f97316);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.approveButton:hover:not(:disabled) {
+    background: #ea6c0a;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.approveButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .completeButton {
     flex: 1;
     padding: 0.875rem 1.5rem;

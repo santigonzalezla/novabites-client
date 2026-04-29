@@ -23,18 +23,27 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
     const [change, setChange] = useState('0');
     const [showOrderDetails, setShowOrderDetails] = useState(false);
     const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+    const [discounts, setDiscounts] = useState<{ [productId: string]: number }>({});
 
+
+    const totalWithDiscounts = cartItems.reduce((sum, item) => {
+        const qty = quantities[item.id!] || 0;
+        const lineTotal = Number(item.basePrice) * qty;
+        const pct = discounts[item.id!] || 0;
+        return sum + lineTotal - Math.round((lineTotal * pct) / 100);
+    }, 0);
+
+    const totalDiscount = Number(orderData.total) - totalWithDiscounts;
 
     useEffect(() =>
     {
         if (paymentMethod === 'Cash' && amountReceived)
         {
             const received = parseFloat(amountReceived);
-            const total = parseFloat(orderData.total);
 
-            (received >= total) ? setChange(String(received - total)) : setChange('0');
+            (received >= totalWithDiscounts) ? setChange(String(received - totalWithDiscounts)) : setChange('0');
         }
-    }, [amountReceived, paymentMethod]);
+    }, [amountReceived, paymentMethod, totalWithDiscounts]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     {
@@ -81,9 +90,8 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
             }
 
             const received = parseFloat(amountReceived);
-            const total = parseFloat(orderData.total);
 
-            if (received < total)
+            if (received < totalWithDiscounts)
             {
                 toast.error("Monto insuficiente", {
                     description: "El monto recibido debe ser mayor o igual al total.",
@@ -150,10 +158,18 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
 
         if (!validatePaymentForm()) return;
 
+        const absoluteDiscounts: { [productId: string]: number } = {};
+        cartItems.forEach(item => {
+            const lineTotal = Number(item.basePrice) * (quantities[item.id!] || 0);
+            const pct = discounts[item.id!] || 0;
+            absoluteDiscounts[item.id!] = Math.round((lineTotal * pct) / 100);
+        });
+
         let orderToCreate: any = {
             quantities,
             cartItems,
-            total: orderData.total
+            total: totalWithDiscounts,
+            discounts: absoluteDiscounts,
         };
 
         if (paymentMethod === 'Transfer')
@@ -229,35 +245,66 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                         </div>
 
                         <div className={styles.cartItems}>
-                            {cartItems.map((item, index) => (
-                                <div key={index} className={styles.cartItem}>
-                                    <div className={styles.itemImage}>
-                                        <Image
-                                            src={item.imageUrl || '/placeholder.jpg'}
-                                            alt={item.name || ''}
-                                            width={40}
-                                            height={40}
-                                            style={{objectFit: 'cover'}}
-                                        />
+                            {cartItems.map((item, index) => {
+                                const lineTotal = Number(item.basePrice) * (quantities[item.id!] || 0);
+                                const pct = discounts[item.id!] || 0;
+                                const discountAmount = Math.round((lineTotal * pct) / 100);
+                                return (
+                                    <div key={index} className={styles.cartItem}>
+                                        <div className={styles.itemImage}>
+                                            <Image
+                                                src={item.imageUrl || '/placeholder.jpg'}
+                                                alt={item.name || ''}
+                                                width={40}
+                                                height={40}
+                                                style={{objectFit: 'cover'}}
+                                            />
+                                        </div>
+                                        <div className={styles.itemInfo}>
+                                            <p className={styles.itemTitle}>{item.name}</p>
+                                            <p className={styles.itemPrice}>${item.basePrice}</p>
+                                        </div>
+                                        <span className={styles.itemQuantity}>×{quantities[item.id!] || 0}</span>
+                                        <div className={styles.itemDiscount}>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="100"
+                                                placeholder="10"
+                                                value={pct || ''}
+                                                onChange={(e) => {
+                                                    const val = Math.max(0, Math.min(Number(e.target.value), 100));
+                                                    setDiscounts(prev => ({ ...prev, [item.id!]: val }));
+                                                }}
+                                                className={styles.discountInput}
+                                            />
+                                            <span className={styles.discountSymbol}>%</span>
+                                        </div>
+                                        <div className={styles.itemTotal}>
+                                            <span>${lineTotal}</span>
+                                            {discountAmount > 0 && (
+                                                <span className={styles.itemDiscountAmount}>-${discountAmount}</span>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className={styles.itemInfo}>
-                                        <p className={styles.itemTitle}>{item.name}</p>
-                                        <p className={styles.itemPrice}>${item.basePrice}</p>
-                                    </div>
-                                    <div className={styles.itemQuantity}>
-                                        <span>{quantities[item.id!] || 0}</span>
-                                    </div>
-                                    <div className={styles.itemTotal}>
-                                        ${(Number(item.basePrice) * (quantities[item.id!] || 0))}
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         <div className={styles.orderSummary}>
                             <div className={styles.subtotalRow}>
-                                <p>Total</p>
+                                <p>Subtotal</p>
                                 <span>${orderData.total}</span>
+                            </div>
+                            {totalDiscount > 0 && (
+                                <div className={styles.discountRow}>
+                                    <p>Descuentos</p>
+                                    <span>-${totalDiscount}</span>
+                                </div>
+                            )}
+                            <div className={styles.totalRow}>
+                                <p>Total</p>
+                                <span>${totalWithDiscounts}</span>
                             </div>
                         </div>
                     </div>

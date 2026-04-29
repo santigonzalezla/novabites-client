@@ -178,7 +178,8 @@
 {
     display: flex;
     align-items: center;
-    height: 50px;
+    min-height: 50px;
+    gap: 8px;
 }
 
 .itemImage
@@ -214,25 +215,86 @@
 
 .itemQuantity
 {
-    background-color: #2D303E;
-    color: #FFFFFF;
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 16px;
+    color: #ABBBC2;
+    font-size: 11px;
+    font-weight: 400;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .itemTotal
 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 68px;
+    flex-shrink: 0;
+}
+
+.itemTotal span:first-child
+{
     font-weight: 300;
     color: #FFFFFF;
     font-size: 12px;
-    width: 60px;
-    text-align: right;
+}
+
+.itemDiscountAmount
+{
+    font-size: 10px;
+    color: var(--orange);
+    font-weight: 400;
+}
+
+.itemDiscount
+{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.discountInput
+{
+    font-family: 'Satoshi', sans-serif;
+    width: 42px;
+    background-color: #2D303E;
+    border: 1px solid #393C49;
+    border-radius: 6px;
+    color: #FFFFFF;
+    padding: 6px 4px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.discountSymbol
+{
+    font-size: 11px;
+    color: #ABBBC2;
+    flex-shrink: 0;
+}
+
+.discountInput::placeholder
+{
+    color: #ABBBC2;
+}
+
+.discountInput:focus
+{
+    outline: none;
+    border-color: var(--orange);
+}
+
+.discountInput::-webkit-outer-spin-button,
+.discountInput::-webkit-inner-spin-button
+{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.discountInput[type=number]
+{
+    -moz-appearance: textfield;
 }
 
 .orderSummary
@@ -265,6 +327,18 @@
 {
     color: #FFFFFF;
     font-weight: 500;
+}
+
+.totalRow
+{
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--orange);
+    font-weight: 700;
+    border-top: 1px solid #2D303E;
+    padding-top: 8px;
+    margin-top: 4px;
 }
 
 .paymentTitle

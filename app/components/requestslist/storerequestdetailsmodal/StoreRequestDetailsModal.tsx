@@ -19,14 +19,16 @@ const returnReasonLabels: Record<ReturnReason, string> = {
 
 interface RequestDetailsModalProps {
     requestId: string;
+    isIncoming?: boolean;
     onClose: () => void;
     onCompleted?: () => void;
 }
 
-const StoreRequestDetailsModal = ({ requestId, onClose, onCompleted }: RequestDetailsModalProps) =>
+const StoreRequestDetailsModal = ({ requestId, isIncoming = false, onClose, onCompleted }: RequestDetailsModalProps) =>
 {
     const [requestData, setRequestData] = useState<StoreRequest | null>(null);
     const [isCompleting, setIsCompleting] = useState(false);
+    const [isApproving, setIsApproving] = useState(false);
     const { data: productsData, execute: executeProducts } = useFetch<Product[]>('/api/product');
     const { execute: executeRequest, isLoading } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
         immediate: false,
@@ -35,6 +37,11 @@ const StoreRequestDetailsModal = ({ requestId, onClose, onCompleted }: RequestDe
         immediate: false,
         method: 'PATCH',
         body: { status: RequestStatus.COMPLETED },
+    });
+    const { execute: executeApprove } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
+        immediate: false,
+        method: 'PATCH',
+        body: { status: RequestStatus.APPROVED },
     });
 
     useEffect(() =>
@@ -139,9 +146,42 @@ const StoreRequestDetailsModal = ({ requestId, onClose, onCompleted }: RequestDe
         if (e.target === e.currentTarget) onClose();
     };
 
+    const handleApprove = async () =>
+    {
+        setIsApproving(true);
+        const updated = await executeApprove();
+        setIsApproving(false);
+
+        if (updated)
+        {
+            setRequestData(updated);
+            toast.success('Solicitud aprobada', {
+                description: 'La reubicación fue aprobada. Complétala cuando los productos sean entregados.',
+                duration: 4000,
+                richColors: true,
+                position: 'top-right'
+            });
+            onCompleted?.();
+        }
+        else
+        {
+            toast.error('Error al aprobar la solicitud', {
+                description: 'No se pudo actualizar el estado. Intenta nuevamente.',
+                duration: 3000,
+                richColors: true,
+                position: 'top-right'
+            });
+        }
+    }
+
+    const canApprove =
+        isIncoming &&
+        requestData?.type === RequestType.RELOCATION_REQUEST &&
+        requestData?.status === RequestStatus.PENDING;
+
     const canComplete =
-        requestData?.type === RequestType.SUPPLY_REQUEST &&
-        requestData?.status === RequestStatus.APPROVED;
+        (requestData?.type === RequestType.SUPPLY_REQUEST && requestData?.status === RequestStatus.APPROVED) ||
+        (isIncoming && requestData?.type === RequestType.RELOCATION_REQUEST && requestData?.status === RequestStatus.APPROVED);
 
     return (
         <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -261,13 +301,22 @@ const StoreRequestDetailsModal = ({ requestId, onClose, onCompleted }: RequestDe
 
                         {/* Acciones */}
                         <div className={styles.modalActions}>
+                            {canApprove && (
+                                <button
+                                    className={styles.approveButton}
+                                    onClick={handleApprove}
+                                    disabled={isApproving}
+                                >
+                                    {isApproving ? 'Aprobando...' : 'Aprobar solicitud'}
+                                </button>
+                            )}
                             {canComplete && (
                                 <button
                                     className={styles.completeButton}
                                     onClick={handleComplete}
                                     disabled={isCompleting}
                                 >
-                                    {isCompleting ? 'Completando...' : 'Completar solicitud'}
+                                    {isCompleting ? 'Completando...' : 'Confirmar recepción'}
                                 </button>
                             )}
                             <button className={styles.closeActionButton} onClick={onClose}>

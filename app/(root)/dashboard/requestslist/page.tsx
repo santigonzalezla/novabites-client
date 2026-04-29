@@ -15,8 +15,10 @@ interface RequestItem {
     type: string;
     status: string;
     targetStoreName: string;
+    requestingStoreName: string;
     requestingUserName: string;
     requestedDate: Date | string;
+    isIncoming: boolean;
 }
 
 const RequestsList = () => {
@@ -53,8 +55,10 @@ const RequestsList = () => {
             type: request.type,
             status: request.status,
             targetStoreName: request.targetStore?.name || 'Tienda no especificada',
+            requestingStoreName: request.requestingStore?.name || 'Tienda no especificada',
             requestingUserName: request.requestingUser?.name || 'Usuario desconocido',
-            requestedDate: request.requestedDate
+            requestedDate: request.requestedDate,
+            isIncoming: request.targetStoreId === user?.storeId,
         }));
 
         mappedRequests.sort((a, b) =>
@@ -147,7 +151,11 @@ const RequestsList = () => {
                                         <div className={styles.requestInfo}>
                                             <div className={styles.infoRow}>
                                                 <StoreIcon />
-                                                <span className={styles.storeName}>{request.targetStoreName}</span>
+                                                <span className={styles.storeName}>
+                                                    {request.isIncoming
+                                                        ? `Entrante de: ${request.requestingStoreName}`
+                                                        : `Destino: ${request.targetStoreName}`}
+                                                </span>
                                             </div>
 
                                             <div className={styles.infoRow}>
@@ -180,6 +188,7 @@ const RequestsList = () => {
             {selectedRequest && (
                 <StoreRequestDetailsModal
                     requestId={selectedRequest}
+                    isIncoming={requestsList.find(r => r.id === selectedRequest)?.isIncoming ?? false}
                     onClose={() => setSelectedRequest(null)}
                     onCompleted={async () => {
                         const requestsData = await execute();
