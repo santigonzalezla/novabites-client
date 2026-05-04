@@ -286,32 +286,47 @@ const OrdersDetailsModal = ({ orderId, type, onClose }: OrdersDetailsModalProps)
                             {/* Productos */}
                             <div className={styles.section}>
                                 <h4 className={styles.sectionTitle}>Productos</h4>
-                                <div className={styles.productsTable}>
-                                    <div className={styles.tableHeader}>
-                                        <span>Producto</span>
-                                        <span>Cantidad</span>
-                                        <span>Precio Unit.</span>
-                                        <span>Total</span>
-                                    </div>
-                                    {billData.details && billData.details.length > 0 ? (
-                                        billData.details.map((detail) => (
-                                            <div key={detail.id} className={styles.tableRow}>
-                                                <span className={styles.productName}>
-                                                    {detail.product?.name || detail.productName || 'Producto'}
-                                                </span>
-                                                <span className={styles.quantity}>{detail.quantity}</span>
-                                                <span className={styles.unitPrice}>
-                                                    {formatPrice(detail.unitPrice || 0)}
-                                                </span>
-                                                <span className={styles.itemTotal}>
-                                                    {formatPrice(detail.subtotal || (detail.quantity * Number(detail.unitPrice || 0)))}
-                                                </span>
+                                {(() => {
+                                    const hasDiscounts = billData.details?.some(d => Number(d.discount || 0) > 0);
+                                    const gridCols = hasDiscounts ? '2fr 1fr 1fr 1fr 1fr' : '2fr 1fr 1fr 1fr';
+                                    return (
+                                        <div className={styles.productsTable}>
+                                            <div className={styles.tableHeader} style={{ gridTemplateColumns: gridCols }}>
+                                                <span>Producto</span>
+                                                <span>Cant.</span>
+                                                <span>Precio Unit.</span>
+                                                {hasDiscounts && <span>Descuento</span>}
+                                                <span>Total</span>
                                             </div>
-                                        ))
-                                    ) : (
-                                        <p className={styles.noProducts}>No hay productos registrados</p>
-                                    )}
-                                </div>
+                                            {billData.details && billData.details.length > 0 ? (
+                                                billData.details.map((detail) => {
+                                                    const discountAmount = Number(detail.discount || 0);
+                                                    return (
+                                                        <div key={detail.id} className={styles.tableRow} style={{ gridTemplateColumns: gridCols }}>
+                                                            <span className={styles.productName}>
+                                                                {detail.product?.name || detail.productName || 'Producto'}
+                                                            </span>
+                                                            <span className={styles.quantity}>{detail.quantity}</span>
+                                                            <span className={styles.unitPrice}>
+                                                                {formatPrice(detail.unitPrice || 0)}
+                                                            </span>
+                                                            {hasDiscounts && (
+                                                                <span className={styles.discountCell}>
+                                                                    {discountAmount > 0 ? `-${formatPrice(discountAmount)}` : '—'}
+                                                                </span>
+                                                            )}
+                                                            <span className={styles.itemTotal}>
+                                                                {formatPrice(detail.subtotal || (detail.quantity * Number(detail.unitPrice || 0)))}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })
+                                            ) : (
+                                                <p className={styles.noProducts}>No hay productos registrados</p>
+                                            )}
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             {/* Información de pago (solo para orders) */}
@@ -361,16 +376,28 @@ const OrdersDetailsModal = ({ orderId, type, onClose }: OrdersDetailsModalProps)
                             )}
 
                             {/* Resumen */}
-                            <div className={styles.summary}>
-                                <div className={styles.summaryRow}>
-                                    <span className={styles.summaryLabel}>Subtotal:</span>
-                                    <span className={styles.summaryValue}>{formatPrice(billData.totalPrice)}</span>
-                                </div>
-                                <div className={`${styles.summaryRow} ${styles.totalRow}`}>
-                                    <span className={styles.summaryLabel}>Total:</span>
-                                    <span className={styles.summaryValue}>{formatPrice(billData.totalPrice)}</span>
-                                </div>
-                            </div>
+                            {(() => {
+                                const totalDiscount = billData.details?.reduce((sum, d) => sum + Number(d.discount || 0), 0) || 0;
+                                const subtotalBeforeDiscount = Number(billData.totalPrice) + totalDiscount;
+                                return (
+                                    <div className={styles.summary}>
+                                        <div className={styles.summaryRow}>
+                                            <span className={styles.summaryLabel}>Subtotal:</span>
+                                            <span className={styles.summaryValue}>{formatPrice(subtotalBeforeDiscount)}</span>
+                                        </div>
+                                        {totalDiscount > 0 && (
+                                            <div className={styles.summaryRow}>
+                                                <span className={styles.summaryLabel}>Descuentos:</span>
+                                                <span className={`${styles.summaryValue} ${styles.discountValue}`}>-{formatPrice(totalDiscount)}</span>
+                                            </div>
+                                        )}
+                                        <div className={`${styles.summaryRow} ${styles.totalRow}`}>
+                                            <span className={styles.summaryLabel}>Total:</span>
+                                            <span className={styles.summaryValue}>{formatPrice(billData.totalPrice)}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
 
                         {/* Acciones */}

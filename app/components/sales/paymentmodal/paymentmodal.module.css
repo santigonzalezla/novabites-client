@@ -297,6 +297,40 @@
     -moz-appearance: textfield;
 }
 
+.discountToggleBtn
+{
+    font-family: 'Satoshi', sans-serif;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    background-color: #2D303E;
+    border: 1px solid #393C49;
+    border-radius: 6px;
+    color: #ABBBC2;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-left: 4px;
+}
+
+.discountToggleBtn:hover
+{
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+.discountToggleBtnActive
+{
+    border-color: var(--orange);
+    color: var(--orange);
+    background-color: rgba(255, 122, 0, 0.1);
+}
+
 .orderSummary
 {
     display: flex;

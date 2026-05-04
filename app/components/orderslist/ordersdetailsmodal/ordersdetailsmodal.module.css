@@ -280,6 +280,17 @@
     font-size: 0.875rem;
 }
 
+.discountCell {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #e53e3e;
+    text-align: right;
+}
+
+.discountValue {
+    color: #e53e3e !important;
+}
+
 .summary {
     margin-top: 1.5rem;
     padding: 1.5rem;
@@ -431,7 +442,6 @@
 
     .tableHeader,
     .tableRow {
-        grid-template-columns: 1.5fr 0.8fr 0.8fr 0.8fr;
         gap: 0.5rem;
         padding: 0.75rem 0.5rem;
     }
@@ -439,6 +449,7 @@
     .productName,
     .quantity,
     .unitPrice,
+    .discountCell,
     .itemTotal {
         font-size: 0.8125rem;
     }

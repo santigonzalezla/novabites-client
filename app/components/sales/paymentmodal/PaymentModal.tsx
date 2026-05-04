@@ -24,6 +24,7 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
     const [showOrderDetails, setShowOrderDetails] = useState(false);
     const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
     const [discounts, setDiscounts] = useState<{ [productId: string]: number }>({});
+    const [openDiscounts, setOpenDiscounts] = useState<{ [productId: string]: boolean }>({});
 
 
     const totalWithDiscounts = cartItems.reduce((sum, item) => {
@@ -265,21 +266,33 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                             <p className={styles.itemPrice}>${item.basePrice}</p>
                                         </div>
                                         <span className={styles.itemQuantity}>×{quantities[item.id!] || 0}</span>
-                                        <div className={styles.itemDiscount}>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                placeholder="10"
-                                                value={pct || ''}
-                                                onChange={(e) => {
-                                                    const val = Math.max(0, Math.min(Number(e.target.value), 100));
-                                                    setDiscounts(prev => ({ ...prev, [item.id!]: val }));
-                                                }}
-                                                className={styles.discountInput}
-                                            />
-                                            <span className={styles.discountSymbol}>%</span>
-                                        </div>
+                                        {openDiscounts[item.id!] ? (
+                                            <div className={styles.itemDiscount}>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    placeholder="0"
+                                                    autoFocus
+                                                    value={pct || ''}
+                                                    onChange={(e) => {
+                                                        const val = Math.max(0, Math.min(Number(e.target.value), 100));
+                                                        setDiscounts(prev => ({ ...prev, [item.id!]: val }));
+                                                    }}
+                                                    className={styles.discountInput}
+                                                />
+                                                <span className={styles.discountSymbol}>%</span>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className={`${styles.discountToggleBtn} ${pct > 0 ? styles.discountToggleBtnActive : ''}`}
+                                                onClick={() => setOpenDiscounts(prev => ({ ...prev, [item.id!]: true }))}
+                                                title="Agregar descuento"
+                                            >
+                                                %
+                                            </button>
+                                        )}
                                         <div className={styles.itemTotal}>
                                             <span>${lineTotal}</span>
                                             {discountAmount > 0 && (

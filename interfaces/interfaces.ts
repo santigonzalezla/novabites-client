@@ -420,6 +420,7 @@ export interface DetailBill extends BaseEntity {
     quantity: number;
     unitPrice: number | string;
     subtotal: number | string;
+    discount?: number | string;
 
     // Relations
     bill?: Bill;
