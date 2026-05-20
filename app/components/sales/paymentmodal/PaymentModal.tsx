@@ -197,6 +197,12 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
         }
     };
 
+    const clearAllDiscounts = () =>
+    {
+        setDiscounts({});
+        setOpenDiscounts({});
+    };
+
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) =>
     {
         if (e.target === e.currentTarget) onClose();
@@ -239,8 +245,20 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                     <p>Orden #{orderData.orderId}</p>
                                 </div>
 
-                                <div className={styles.addButton}>
-                                    <Plus />
+                                <div className={styles.headerActions}>
+                                    {Object.values(discounts).some(v => v > 0) && (
+                                        <button
+                                            type="button"
+                                            className={styles.clearDiscountsBtn}
+                                            onClick={clearAllDiscounts}
+                                            title="Quitar todos los descuentos"
+                                        >
+                                            Quitar descuentos
+                                        </button>
+                                    )}
+                                    <div className={styles.addButton}>
+                                        <Plus />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -282,6 +300,17 @@ const PaymentModal = ({ handleCreateOrder, orderData, setOrderData, quantities, 
                                                     className={styles.discountInput}
                                                 />
                                                 <span className={styles.discountSymbol}>%</span>
+                                                <button
+                                                    type="button"
+                                                    className={styles.discountCloseBtn}
+                                                    onClick={() => {
+                                                        setDiscounts(prev => ({ ...prev, [item.id!]: 0 }));
+                                                        setOpenDiscounts(prev => ({ ...prev, [item.id!]: false }));
+                                                    }}
+                                                    title="Quitar descuento"
+                                                >
+                                                    ×
+                                                </button>
                                             </div>
                                         ) : (
                                             <button

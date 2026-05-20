@@ -331,6 +331,51 @@
     background-color: rgba(255, 122, 0, 0.1);
 }
 
+.headerActions
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clearDiscountsBtn
+{
+    font-family: 'Satoshi', sans-serif;
+    background-color: transparent;
+    border: 1px solid #393C49;
+    border-radius: 6px;
+    color: #ABBBC2;
+    font-size: 11px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.clearDiscountsBtn:hover
+{
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+.discountCloseBtn
+{
+    background: none;
+    border: none;
+    color: #ABBBC2;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.discountCloseBtn:hover
+{
+    color: var(--orange);
+}
+
 .orderSummary
 {
     display: flex;

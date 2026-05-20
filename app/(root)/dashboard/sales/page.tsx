@@ -372,7 +372,7 @@ const Sales = () =>
                                     centralStock: stockInfo.currentStock,
                                     basePrice: stockInfo.price
                                 }}
-                                onAddToCart={() => addToCart(item)}
+                                onAddToCart={() => addToCart({ ...item, basePrice: stockInfo.price })}
                             />
                         );
                     })}
