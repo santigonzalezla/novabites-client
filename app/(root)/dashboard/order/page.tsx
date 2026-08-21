@@ -7,7 +7,7 @@ import OrderCard from '@/app/components/order/ordercard/OrderCard';
 import { useEffect, useState } from 'react';
 import OrderModal from '@/app/components/order/ordermodal/OrderModal';
 import { useFetch } from '@/hooks/useFetch';
-import { CustomOrder } from '@/interfaces/interfaces';
+import { CustomOrder, PaginatedResponse } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import AddOrderModal from '@/app/components/order/addordermodal/AddOrderModal';
 import { toast } from 'sonner';
@@ -16,7 +16,7 @@ import { useAuth } from '@/context/AuthContext';
 const Order = () =>
 {
     const { user } = useAuth();
-    const { isLoading, error, execute } = useFetch<CustomOrder[]>(`/api/custom-order?storeId=${user?.storeId ?? ''}`);
+    const { isLoading, error, execute } = useFetch<PaginatedResponse<CustomOrder>>(`/api/custom-order?storeId=${user?.storeId ?? ''}&limit=500`);
     const [allOrders, setAllOrders] = useState<CustomOrder[]>([]);
     const [statusOrder, setStatusOrder] = useState<StatusOrder | 'all'>('all');
     const [filteredData, setFilteredData] = useState<CustomOrder[]>([]);
@@ -30,13 +30,11 @@ const Order = () =>
 
         const fetchOrders = async () =>
         {
-            const orders = await execute();
+            const result = await execute();
 
-            if (orders)
+            if (result)
             {
-                console.log('storeId del usuario:', user?.storeId);
-                console.log('Total pedidos recibidos:', orders.length);
-                orders.forEach(o => console.log(`Pedido #${o.numId} - tienda: ${o.store?.id} (${o.store?.name})`));
+                const orders = result.data;
                 setAllOrders(orders);
                 setFilteredData(orders);
             }
@@ -100,10 +98,11 @@ const Order = () =>
                     position: 'top-right'
                 });
 
-                const orders = await execute();
+                const result = await execute();
 
-                if (orders)
+                if (result)
                 {
+                    const orders = result.data;
                     setAllOrders(orders);
 
                     if (statusOrder === 'all') setFilteredData(orders);
@@ -142,10 +141,11 @@ const Order = () =>
                     position: 'top-right'
                 });
 
-                const orders = await execute();
+                const result = await execute();
 
-                if (orders)
+                if (result)
                 {
+                    const orders = result.data;
                     setAllOrders(orders);
 
                     if (statusOrder === 'all') setFilteredData(orders);
@@ -170,7 +170,7 @@ const Order = () =>
     {
         try
         {
-            let createdOrder: CustomOrder[] | CustomOrder | null;
+            let createdOrder: PaginatedResponse<CustomOrder> | CustomOrder | null;
 
             if (imageFiles && imageFiles.length > 0)
             {
@@ -234,10 +234,11 @@ const Order = () =>
                     position: 'top-right'
                 });
 
-                const orders = await execute();
+                const result = await execute();
 
-                if (orders)
+                if (result)
                 {
+                    const orders = result.data;
                     setAllOrders(orders);
 
                     if (statusOrder === 'all') setFilteredData(orders);

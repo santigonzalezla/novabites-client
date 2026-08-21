@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import styles from './page.module.css';
-import { Order, DailyExpense, CustomOrder } from '@/interfaces/interfaces';
+import { Order, DailyExpense, CustomOrder, PaginatedResponse } from '@/interfaces/interfaces';
 import { Calendar, DollarSign, TrendingUp, TrendingDown } from '@/app/components/svg';
 import { useFetch } from '@/hooks/useFetch';
 import { useAuth } from '@/context/AuthContext';
@@ -35,8 +35,8 @@ const DailySalesReport = () =>
     const [pendingExpenses, setPendingExpenses] = useState<PendingExpense[]>([]);
     const [showClosingModal, setShowClosingModal] = useState(false);
     const [closingsCount, setClosingsCount] = useState(0);
-    const { error: ordersError, isLoading: ordersLoading, execute: fetchOrders } = useFetch<Order[]>(
-        `/api/order?storeId=${user?.storeId}&date=${localToUTC(selectedDate)}`,
+    const { error: ordersError, isLoading: ordersLoading, execute: fetchOrders } = useFetch<PaginatedResponse<Order>>(
+        `/api/order?storeId=${user?.storeId}&date=${localToUTC(selectedDate)}&limit=500`,
         { immediate: false }
     );
     const { error: expensesError, isLoading: expensesLoading, execute: fetchExpenses } = useFetch<DailyExpense[]>(
@@ -47,8 +47,8 @@ const DailySalesReport = () =>
         `/api/cash-closing/count/${user?.storeId}/${localToUTC(selectedDate)}`,
         { immediate: false }
     );
-    const { execute: fetchCompletedCustomOrders } = useFetch<CustomOrder[]>(
-        `/api/custom-order?storeId=${user?.storeId}&status=COMPLETED&updatedAtDate=${selectedDate}`,
+    const { execute: fetchCompletedCustomOrders } = useFetch<PaginatedResponse<CustomOrder>>(
+        `/api/custom-order?storeId=${user?.storeId}&status=COMPLETED&updatedAtDate=${selectedDate}&limit=500`,
         { immediate: false }
     );
 
@@ -59,7 +59,7 @@ const DailySalesReport = () =>
             if (user?.storeId)
             {
                 const ordersData = await fetchOrders();
-                if (ordersData) setOrders(ordersData);
+                if (ordersData) setOrders(ordersData.data);
 
                 const expensesData = await fetchExpenses();
                 if (expensesData) setExpenses(expensesData);
@@ -68,7 +68,7 @@ const DailySalesReport = () =>
                 if (closingsData) setClosingsCount(closingsData.count);
 
                 const customOrdersData = await fetchCompletedCustomOrders();
-                if (customOrdersData) setCompletedCustomOrders(customOrdersData);
+                if (customOrdersData) setCompletedCustomOrders(customOrdersData.data);
             }
         };
 

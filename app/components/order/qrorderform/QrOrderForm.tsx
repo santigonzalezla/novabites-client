@@ -40,14 +40,14 @@ const QrOrderForm = ({ token, userId, storeId, onSuccess }: QrOrderFormProps) =>
         {
             try
             {
-                const response = await fetch(`${SERVER_URL}/api/product`, {
+                const response = await fetch(`${SERVER_URL}/api/product?limit=500`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok)
                 {
-                    const data = await response.json();
-                    setProducts(data);
+                    const body = await response.json();
+                    setProducts(body.data);
                 }
             }
             catch (e)

@@ -15,6 +15,7 @@ import {
     DetailOrder,
     StoreProduct,
     SubcategoryProduct,
+    PaginatedResponse,
 } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import { useAuth } from '@/context/AuthContext';
@@ -24,7 +25,8 @@ import { FilterCat } from '@/app/components/svg';
 const Sales = () =>
 {
     const { user } = useAuth();
-    const { data, isLoading, error } = useFetch<Product[]>('/api/product');
+    const { data: productsResponse, isLoading, error } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500');
+    const data = productsResponse?.data ?? null;
     const [storeProductList, setStoreProductList] = useState<StoreProduct[]>([]);
     const { isLoading: isStoreProductLoading, error: storeProductError, execute: executeStoreProduct } = useFetch<StoreProduct[]>(`/api/store-product/store/${user?.storeId}`, {
         immediate: false,

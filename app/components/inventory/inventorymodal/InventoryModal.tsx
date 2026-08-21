@@ -7,7 +7,7 @@ import { useFetch } from '@/hooks/useFetch';
 import mockData from '@/app/components/shared/data/mockData.json';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { CategoryProduct, Store, StoreProduct, StoreRequest } from '@/interfaces/interfaces';
+import { CategoryProduct, PaginatedResponse, Product, Store, StoreProduct, StoreRequest } from '@/interfaces/interfaces';
 import { RequestStatus, RequestType, TypeStore } from '@/interfaces/enums';
 
 interface InventoryModalProps {
@@ -33,7 +33,8 @@ const InventoryModal = ({ onClose, onSuccess }: InventoryModalProps) =>
     const [storeReturnData, setStoreReturnData] = useState<StoreRequestItem[]>([]);
     const [storeRelocateData, setStoreRelocateData] = useState<StoreRequestItem[]>([]);
     const [showReturnConfirm, setShowReturnConfirm] = useState(false);
-    const { data } = useFetch('/api/product');
+    const { data: productsResponse } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500');
+    const data = productsResponse?.data ?? null;
     const { data: storeProductsData } = useFetch<StoreProduct[]>(`/api/store-product/store/${user?.storeId}`);
     const { data: categoriesData } = useFetch<CategoryProduct[]>('/api/category-product');
 

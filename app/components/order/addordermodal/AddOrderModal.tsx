@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import styles from './addordermodal.module.css';
-import type { Client, CustomOrder, CustomOrderProduct, DetailCustomOrder, Product } from '@/interfaces/interfaces';
+import type { Client, CustomOrder, CustomOrderProduct, DetailCustomOrder, PaginatedResponse, Product } from '@/interfaces/interfaces';
 import { StatusOrder } from '@/interfaces/enums';
 import { useFetch } from '@/hooks/useFetch';
 import { AddItem, Check, Plus } from '@/app/components/svg';
@@ -19,7 +19,8 @@ interface AddOrderModalProps {
 const AddOrderModal = ({ isOpen, onClose, onSave }: AddOrderModalProps) =>
 {
     const { user } = useAuth();
-    const { data, isLoading, error } = useFetch<Product[]>('/api/product');
+    const { data: productsResponse, isLoading, error } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500');
+    const data = productsResponse?.data ?? null;
     const [clientData, setClientData] = useState<Partial<Client>>({name: '', phone: '', email: ''});
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState<string>('');

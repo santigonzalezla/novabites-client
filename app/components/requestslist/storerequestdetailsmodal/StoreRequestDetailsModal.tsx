@@ -2,7 +2,7 @@
 
 import styles from "./storerequestdetailsmodal.module.css";
 import { useEffect, useState, useMemo } from "react";
-import type { StoreRequest, Product } from '@/interfaces/interfaces';
+import type { StoreRequest, Product, PaginatedResponse } from '@/interfaces/interfaces';
 import { X } from '@/app/components/svg';
 import { toast } from 'sonner';
 import { useFetch } from '@/hooks/useFetch';
@@ -29,7 +29,8 @@ const StoreRequestDetailsModal = ({ requestId, isIncoming = false, onClose, onCo
     const [requestData, setRequestData] = useState<StoreRequest | null>(null);
     const [isCompleting, setIsCompleting] = useState(false);
     const [isApproving, setIsApproving] = useState(false);
-    const { data: productsData, execute: executeProducts } = useFetch<Product[]>('/api/product');
+    const { data: productsResponse, execute: executeProducts } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500');
+    const productsData = productsResponse?.data ?? null;
     const { execute: executeRequest, isLoading } = useFetch<StoreRequest>(`/api/store-request/${requestId}`, {
         immediate: false,
     });

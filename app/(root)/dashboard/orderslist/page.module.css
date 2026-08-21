@@ -48,6 +48,61 @@
     gap: 1.25rem;
 }
 
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.tabButton {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+    color: var(--text-primary);
+}
+
+.tabButtonActive {
+    color: var(--purple);
+    border-bottom-color: var(--purple);
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+.paginationInfo {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.paginationControls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.paginationButton {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary);
+    background: var(--surface-primary);
+    color: var(--text-primary);
+}
+
+.paginationButton:disabled {
+    opacity: 0.4;
+}
+
 .billCard {
     background: var(--surface-primary);
     border: 1px solid var(--border-primary);

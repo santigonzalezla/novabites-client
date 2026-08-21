@@ -4,7 +4,7 @@ import styles from './externalstockmodal.module.css';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'sonner';
-import type { Product, Supplier } from '@/interfaces/interfaces';
+import type { PaginatedResponse, Product, Supplier } from '@/interfaces/interfaces';
 import { X } from '@/app/components/svg';
 
 interface ExternalStockItem {
@@ -24,7 +24,8 @@ const ExternalStockModal = ({ onClose, onSuccess }: ExternalStockModalProps) => 
     const [isSaving, setIsSaving] = useState(false);
 
     const { data: suppliers } = useFetch<Supplier[]>('/api/supplier');
-    const { data: products } = useFetch<Product[]>('/api/product');
+    const { data: productsResponse } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500');
+    const products = productsResponse?.data ?? null;
     const { execute: executeAdd } = useFetch('/api/stock/external', {
         immediate: false,
         method: 'POST',

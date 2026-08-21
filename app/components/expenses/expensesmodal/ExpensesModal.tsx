@@ -2,7 +2,7 @@
 
 import { MouseEvent, useEffect, useState } from 'react';
 import styles from './expensesmodal.module.css';
-import { CategoryProduct, CustomOrder, DailyExpense, Order, Product, StoreProduct } from '@/interfaces/interfaces';
+import { CategoryProduct, CustomOrder, DailyExpense, Order, PaginatedResponse, Product, StoreProduct } from '@/interfaces/interfaces';
 import { useFetch } from '@/hooks/useFetch';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -52,7 +52,7 @@ const ExpensesModal = ({ onClose, orders, completedCustomOrders, selectedDate, p
 
     const { data: storeData } = useFetch('/api/store');
     const { data: categoriesData } = useFetch<CategoryProduct[]>('/api/category-product');
-    const { isLoading: isLoadingProducts, execute: executeProducts } = useFetch<Product[]>('/api/product', { immediate: false });
+    const { isLoading: isLoadingProducts, execute: executeProducts } = useFetch<PaginatedResponse<Product>>('/api/product?limit=500', { immediate: false });
     const { execute: executeStoreRequest } = useFetch('/api/store-request', { immediate: false });
     const { execute: executeExpense } = useFetch('/api/daily-expense', { immediate: false });
     const { execute: executeCashClosing } = useFetch('/api/cash-closing', { immediate: false });
@@ -73,9 +73,10 @@ const ExpensesModal = ({ onClose, orders, completedCustomOrders, selectedDate, p
                 if (lastClosingData) setLastClosingTime(new Date(lastClosingData.createdAt));
             }
 
-            const products = await executeProducts();
-            if (products)
+            const productsResult = await executeProducts();
+            if (productsResult)
             {
+                const products = productsResult.data;
                 setAllProducts(products);
 
                 let filteredOrders = orders;
